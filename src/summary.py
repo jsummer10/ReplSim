@@ -13,6 +13,8 @@ import os
 import xlsxwriter
 from xlsxwriter     import Workbook
 
+import plotly.graph_objects as go
+
 class Summary():
     """ This class creates an excel summary of the simulation """ 
 
@@ -25,6 +27,8 @@ class Summary():
         self.WriteSummaryData()
         self.WriteCacheData()
         self.CloseWorkbook()
+
+        self.GraphHits()
 
     def CreateWorkbook(self):
         """ Open and set workbook configurations """
@@ -106,6 +110,25 @@ class Summary():
                 y += 1
 
             x = x_end + 1
+
+    def GraphHits(self):
+        """ Graph a comparison of the hits of each sim """
+
+        x_sim  = []
+        y_rate = []
+
+        for sim in self.sim_list:
+            x_sim.append(sim['cache'].config_name)
+            y_rate.append((sim['hits'] / (sim['misses'] + sim['hits']))*100)
+
+        # Graph bar graph to show the number of commits by author
+        fig = go.Figure([go.Bar(x=x_sim, y=y_rate)])
+
+        fig.update_layout(title_text  = 'Hit Rate Comparison',
+                          xaxis_title = 'Simulations',
+                          yaxis_title = 'Hit Rate')
+
+        fig.write_html('output/HitRateComparison.html') 
 
     def CloseWorkbook(self):
         self.sim_workbook.close()

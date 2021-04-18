@@ -26,7 +26,7 @@ def main():
 
     InitializeLogger()
 
-    mem_accesses = RandomMem(100, 100, True)
+    mem_accesses = RandomMem(100, 100)
 
     Simulation(mem_accesses)
 
