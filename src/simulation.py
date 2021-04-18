@@ -27,6 +27,7 @@ class Simulation():
         sim_list.append(self.LRUSim())
         sim_list.append(self.RRSim())
         sim_list.append(self.LFRUSim())
+        sim_list.append(self.LFUSim())
 
         sim_summary = Summary(sim_list)
 
@@ -69,4 +70,10 @@ class Simulation():
         """ Run sim with LFRU, 2-way set associative """
 
         cache = Cache(config_name='LFRU Cache', repl='LFRU', ways=2)
+        return self.Simulate(cache)
+
+    def LFUSim(self):
+        """ Run sim with LFU, 2-way set associative """
+
+        cache = Cache(config_name='LFU Cache', repl='LFU', ways=2)
         return self.Simulate(cache)

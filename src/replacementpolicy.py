@@ -27,6 +27,8 @@ class ReplacementPolicy():
             return self.RR(cache)
         elif self.repl == 'LFRU':
             return self.LFRU(cache, address_index, usage_index)
+        elif self.repl == 'LFU':
+            return self.LFU(cache, address_index, usage_index)
 
     def LRU(self, cache, address_index):
         """ perform a least recently used replacement """ 
@@ -45,6 +47,24 @@ class ReplacementPolicy():
         """ perform a random replacement """ 
         
         return random.randint(0, len(cache)-1)
+
+    def LFU(self, cache, address_index, usage_index):
+        """ perform a least frequently used replacement """ 
+        
+        # Perform least frequently used analysis
+        min_used = None
+        least_used_tags = []
+
+        for key, value in usage_index[address_index].items():
+            if min_used is None or value < min_used:
+                min_used = value
+                least_used_tags = [key]
+            elif value == min_used:
+                least_used_tags.append(key)
+
+        for index, line in enumerate(cache):
+            if line[address_index]['tag'] in least_used_tags:
+                return index
 
     def LFRU(self, cache, address_index, usage_index):
         """ perform a least frequently recently used replacement """ 
