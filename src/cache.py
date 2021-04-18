@@ -45,7 +45,11 @@ class Cache():
 
         self.LogConfig()
 
-        self.cache_incrementer = 1
+        self.usage_index = []
+        for i in range(0, self.ways):
+            self.usage_index.append(dict())
+
+        self.recency_index = 1
 
     def L1CacheAccess(self, address):
         """ Access the cache """
@@ -69,8 +73,14 @@ class Cache():
                 continue
 
             if address_tag == line[address_index]['tag']:
-                self.cache[index][address_index]['tag'] = self.cache_incrementer
-                self.cache_incrementer += 1
+                self.cache[index][address_index]['tag'] = self.recency_index
+                self.recency_index += 1
+
+                if address_tag in self.usage_index[address_index].keys():
+                    self.usage_index[address_index][address_tag] += 1
+                else:
+                    self.usage_index[address_index][address_tag] = 1
+
                 return True
 
         #-------------------------
@@ -82,22 +92,36 @@ class Cache():
             if line[address_index] is None:
                 # Get value from memory
 
-                cache_line = { 'incrementer':  self.cache_incrementer, 'tag': address_tag }
+                cache_line = { 'recency_index'  : self.recency_index, 
+                               'tag'            : address_tag }
+
                 self.cache[index][address_index] = cache_line  
+
+                if address_tag in self.usage_index[address_index].keys():
+                    self.usage_index[address_index][address_tag] += 1
+                else:
+                    self.usage_index[address_index][address_tag] = 1
             
-                self.cache_incrementer += 1
+                self.recency_index += 1
                 return False
 
-        repl_index = self.repl_policy.Replace(self.cache, address_index)
+        repl_index = self.repl_policy.Replace(self.cache, address_index, self.usage_index)
 
         if repl_index is None:
             return False
 
         # Replace the specified index
-        cache_line = { 'incrementer':  self.cache_incrementer, 'tag': address_tag }
+        cache_line = { 'recency_index':  self.recency_index, 
+                       'tag': address_tag }
+
         self.cache[repl_index][address_index] = cache_line
 
-        self.cache_incrementer += 1
+        if address_tag in self.usage_index[address_index].keys():
+            self.usage_index[address_index][address_tag] += 1
+        else:
+            self.usage_index[address_index][address_tag] = 1
+
+        self.recency_index += 1
         return False
 
     def PrintCache(self):
