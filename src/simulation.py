@@ -10,7 +10,7 @@ Description : This file contains the simulation class that will
 
 import sys
 from cache      import Cache
-from summary    import CreateSummarySheet, WriteSummaryData, CreateCacheSheet
+from summary    import Summary
 
 class Simulation():
     """ This class defines the simulation environment """
@@ -23,67 +23,62 @@ class Simulation():
     def Run(self):
         """ Run simulation """
 
-        CreateSummarySheet()
-        CreateCacheSheet()
+        sim_list = []
 
-        self.LRUSim()
-        self.RandomSim()
+        sim_list.append(self.LRUSim())
+        sim_list.append(self.RandomSim())
+
+        sim_summary = Summary(sim_list)
 
     def LRUSim(self):
         """ Run LRU Simulation """
 
-        cache = Cache(repl='LRU', ways=1)
+        cache = Cache(config_name='LRU Cache', repl='LRU', ways=2)
 
-        self.misses = 0
-        self.hits   = 0
+        misses = 0
+        hits   = 0
 
         history = []
 
         for access in self.mem_accesses:
             if cache.L1CacheAccess(access):
-                self.hits += 1
+                hits += 1
                 history.append([hex(access), 'Hit'])
             else:
-                self.misses += 1
+                misses += 1
                 history.append([hex(access), 'Miss'])
 
-        cache.WriteCache(1, 'LRU Cache')
-        self.WriteStats(1, history, 'LRU Stats')
+        sim_data = { 'sim_name' : 'LRU Cache', 
+                     'history'  : history, 
+                     'cache'    : cache,
+                     'hits'     : hits,
+                     'misses'   : misses }
+
+        return sim_data
 
     def RandomSim(self):
-        """ Run Random Simulation """
+        """ Run RR Simulation """
 
-        cache = Cache(repl='Random', ways=1)
+        cache = Cache(config_name='RR Cache', repl='Random', ways=2)
 
-        self.misses = 0
-        self.hits   = 0
+        misses = 0
+        hits   = 0
 
         history = []
 
         for access in self.mem_accesses:
             if cache.L1CacheAccess(access):
-                self.hits += 1
+                hits += 1
                 history.append([hex(access), 'Hit'])
             else:
-                self.misses += 1
+                misses += 1
                 history.append([hex(access), 'Miss'])
 
-        cache.WriteCache(4, 'Random Cache')
-        self.WriteStats(4, history, 'Random Stats')
+        sim_data = { 'sim_name' : 'RR Cache', 
+                     'history'  : history, 
+                     'cache'    : cache,
+                     'hits'     : hits,
+                     'misses'   : misses }
 
-    def WriteStats(self, x, history, title):
-        """ Prints simulation statistics """ 
+        return sim_data
 
-        hit_rate = self.hits / (self.misses + self.hits)
-
-        WriteSummaryData(1, x, [title])
-
-        WriteSummaryData(2, x, ['Hits:', self.hits])
-        WriteSummaryData(3, x, ['Misses:', self.misses])
-        WriteSummaryData(4, x, ['Hit Rate:', '{:0.2f}%'.format(hit_rate * 100)])
-
-        y = 6
-
-        for access in history:
-            WriteSummaryData(y, x, access)
-            y += 1

@@ -13,49 +13,99 @@ import os
 import xlsxwriter
 from xlsxwriter     import Workbook
 
-def CreateWorkbook():
-    """ Open and set workbook configurations """
-    
-    if not os.path.isdir('output'):
-        os.mkdir('output')
+class Summary():
+    """ This class creates an excel summary of the simulation """ 
 
-    global sim_workbook
+    def __init__(self, sim_list):
 
-    sim_workbook = Workbook('output/sim_data.xlsx')
+        self.sim_list = sim_list
 
-    sim_workbook.set_size(3000, 1600)
+        self.CreateWorkbook()
+        self.CreateFormats()
+        self.WriteSummaryData()
+        self.WriteCacheData()
+        self.CloseWorkbook()
 
-def CreateSummarySheet():
-    """ Create excel sheet for the summary """
+    def CreateWorkbook(self):
+        """ Open and set workbook configurations """
+        
+        if not os.path.isdir('output'):
+            os.mkdir('output')
 
-    global sum_sheet
+        self.sim_workbook = Workbook('output/sim_data.xlsx')
 
-    sum_sheet = sim_workbook.add_worksheet('Simulation Summary')
+        self.sim_workbook.set_size(2000, 1600)   
 
-def WriteSummaryData(y, x, data):
-    """ Write a list to the summary sheet """
-    sum_sheet.write_row(y, x, data)
+    def CreateFormats(self):
+        """ Create formats to be used in excel spreadsheet """
 
-def CreateCacheSheet():
-    """ Create excel sheet for the summary """
+        self.heading    = self.sim_workbook.add_format({'bold': True, 'align': 'center', 'valign': 'vcenter', 'bg_color': '#DADADA', 'border':1})
+        self.data       = self.sim_workbook.add_format({'align': 'center', 'valign': 'vcenter', 'border':1}) 
+        self.percent    = self.sim_workbook.add_format({'num_format': '0.00%', 'align':'center', 'valign': 'vcenter', 'border':1})
 
-    global cache_sheet
+    def WriteSummaryData(self):
+        """ Write a list to the summary sheet """
 
-    cache_sheet = sim_workbook.add_worksheet('Cache')
+        sum_sheet = self.sim_workbook.add_worksheet('Summary')
+        sum_sheet.set_zoom(130)
+        sum_sheet.set_default_row(20)
 
-def WriteCacheData(x, cache, title):
-    """ Create excel sheet for the cache """
+        x = 1
+        for sim in self.sim_list:
 
-    cache_sheet.write(1, x, title)
+            hit_rate = sim['hits'] / (sim['misses'] + sim['hits'])
 
-    cache_sheet.write(2, x, 'Use Index')
+            sum_sheet.merge_range(1, x, 1, x+1, sim['cache'].config_name, self.heading)
+            sum_sheet.write_row(2, x, ['Hits:', sim['hits']], self.data)
+            sum_sheet.write_row(3, x, ['Misses:', sim['misses']], self.data)
+            sum_sheet.write_row(4, x, ['Hit Rate:', '{:0.2f}%'.format(hit_rate * 100)], self.percent)
 
-    for i in range(1, len(cache[0])):
-        cache_sheet.write(2, i+x, 'Block ' + str(i))
+            y = 6
 
-    y = 3
-    for line in cache:
-        pass # TODO
+            for access in sim['history']:
+                sum_sheet.write_row(y, x, access, self.data)
+                y += 1
 
-def CloseWorkbook():
-    sim_workbook.close()
+            x += 3
+
+    def WriteCacheData(self):
+        """ Create excel sheet for the cache """
+
+        cache_sheet = self.sim_workbook.add_worksheet('Cache')
+        cache_sheet.set_zoom(130)
+        cache_sheet.set_default_row(20)
+
+        x = 1
+        for sim in self.sim_list:
+
+            cache_obj = sim['cache']
+
+            # Heading
+            cache_sheet.merge_range(1, x, 1, x+cache_obj.ways-1, sim['cache'].config_name, self.heading)
+
+            # Set lables
+            x_cur = x
+            for way in range(0,cache_obj.ways):
+                cache_sheet.write(2, x_cur, 'Set ' + str(way), self.heading)
+                x_cur += 1
+
+            x_end = x_cur
+
+            # Values
+            y = 3
+            for line in cache_obj.cache:
+                x_cur = x
+                for way in range(0,len(line)):
+                    if line[way]['tag'] is None:
+                        cache_sheet.write(y, x_cur, 'set ' + str(way), self.data)
+                    else:
+                        cache_sheet.write(y, x_cur, hex(line[way]['tag']), self.data)
+
+                    x_cur += 1
+
+                y += 1
+
+            x = x_end + 1
+
+    def CloseWorkbook(self):
+        self.sim_workbook.close()

@@ -10,12 +10,12 @@ Description : This file contains the cache class which will
 
 import sys, math, logging
 from replacementpolicy  import ReplacementPolicy
-from summary            import WriteCacheData
 
 class Cache():
     """ This class defines the cache that will be simulated """
 
-    def __init__(self, repl, ways):
+    def __init__(self, config_name, repl, ways):
+        self.config_name = config_name
         self.Configure(repl, ways)
 
     def Configure(self, repl, ways):
@@ -195,9 +195,6 @@ class Cache():
         logging.info('')
         logging.info('------------------------------------')
         logging.info('')
-
-    def WriteCache(self, x, title):
-        WriteCacheData(x, self.cache, title)
 
 
 

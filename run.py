@@ -14,7 +14,6 @@ sys.path.insert(0, os.getcwd() + os.path.sep + 'src')
 from simulation import Simulation
 from fileparser import Parse
 from genmem     import GenRandomAccesses
-from summary    import CreateWorkbook, CloseWorkbook
 from logger     import InitializeLogger
 
 def MemFromFile(filename):
@@ -29,11 +28,7 @@ def main():
 
     mem_accesses = RandomMem(100, 100, True)
 
-    CreateWorkbook()
-
     Simulation(mem_accesses)
-
-    CloseWorkbook()
 
 if __name__ == '__main__':
     main()
