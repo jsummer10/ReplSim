@@ -15,6 +15,7 @@ from simulation import Simulation
 from fileparser import Parse
 from genmem     import GenRandomAccesses
 from summary    import CreateWorkbook, CloseWorkbook
+from logger     import InitializeLogger
 
 def MemFromFile(filename):
     return Parse('mem/sample_mem.txt')
@@ -23,6 +24,9 @@ def RandomMem(size, max_address, save_mem=False):
     return GenRandomAccesses(100, max_address, save_mem)
 
 def main():
+
+    InitializeLogger()
+
     mem_accesses = RandomMem(100, 100, True)
 
     CreateWorkbook()

@@ -8,6 +8,7 @@ Description : This file contains the simulation class that will
               run all simulations
 '''
 
+import sys
 from cache      import Cache
 from summary    import CreateSummarySheet, WriteSummaryData, CreateCacheSheet
 
@@ -31,7 +32,7 @@ class Simulation():
     def LRUSim(self):
         """ Run LRU Simulation """
 
-        cache = Cache('LRU')
+        cache = Cache(repl='LRU', ways=1)
 
         self.misses = 0
         self.hits   = 0
@@ -52,7 +53,7 @@ class Simulation():
     def RandomSim(self):
         """ Run Random Simulation """
 
-        cache = Cache('Random')
+        cache = Cache(repl='Random', ways=1)
 
         self.misses = 0
         self.hits   = 0

@@ -18,25 +18,25 @@ class ReplacementPolicy():
     def __init__(self, repl):
         self.repl = repl
 
-    def Replace(self, cache):
+    def Replace(self, cache, address_index):
         """ Pass to selected replacement policy """
 
         if self.repl == 'LRU':
-            return self.LRU(cache)
+            return self.LRU(cache, address_index)
         elif self.repl == 'Random':
             return self.Random(cache)
 
-    def LRU(self, cache):
+    def LRU(self, cache, address_index):
         """ perform a least recently used replacement """ 
         
-        min_value = cache[0][0]
+        min_value = cache[0][address_index]['incrementer']
         
         for line in cache:
-            if line[0] < min_value:
-                min_value = line[0]
+            if line[address_index]['incrementer'] < min_value:
+                min_value = line[address_index]['incrementer']
 
         for index, line in enumerate(cache):
-            if line[0] == min_value:
+            if line[address_index]['incrementer'] == min_value:
                 return index
 
     def Random(self, cache):

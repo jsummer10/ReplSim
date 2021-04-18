@@ -55,10 +55,7 @@ def WriteCacheData(x, cache, title):
 
     y = 3
     for line in cache:
-        cache_sheet.write(y, x, line[0])
-        for i in range(1,len(line)):
-            cache_sheet.write(y, i+x, hex(line[i]))
-        y += 1
+        pass # TODO
 
 def CloseWorkbook():
     sim_workbook.close()
