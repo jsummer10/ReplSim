@@ -126,7 +126,7 @@ class Summary():
 
         fig.update_layout(title_text  = 'Hit Rate Comparison',
                           xaxis_title = 'Simulations',
-                          yaxis_title = 'Hit Rate')
+                          yaxis_title = 'Hit Rate (%)')
 
         fig.write_html('output/HitRateComparison.html') 
 
