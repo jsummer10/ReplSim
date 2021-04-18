@@ -10,6 +10,7 @@ Description : This file contains the cache class which will
 
 import sys, math, logging
 from replacementpolicy  import ReplacementPolicy
+from config             import cache_config
 
 class Cache():
     """ This class defines the cache that will be simulated """
@@ -21,9 +22,9 @@ class Cache():
     def Configure(self, repl, ways):
         """ Configure cache """
 
-        self.address_size   = 32    # bits
-        self.cache_size     = 32    # bytes; Has to be power of 2
-        self.line_size      = 4     # bytes: Has to be power of 2 and less than cache size
+        self.address_size   = cache_config['address_size']
+        self.cache_size     = cache_config['cache_size']
+        self.line_size      = cache_config['line_size']
 
         self.ways           = int(ways)
         self.offset_bits    = int(math.log(self.line_size, 2))   # Log base 2 of line size

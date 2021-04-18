@@ -8,27 +8,33 @@ Description : The file contains the main functions to run
               the simulations 
 '''
 
-import os,sys
+__softwarename__    = 'Replacement Policy Simulation'
+__author__          = 'Jake Summerville, Henry Lee, Martin Lopez, Fausto Sanchez'
+__copyright__       = 'Copyright (C) 2021 Jake Summerville, Henry Lee, Martin Lopez, Fausto Sanchez'
+__credits__         = ['Jake Summerville, Henry Lee, Martin Lopez, Fausto Sanchez']
+__version__         = '1.0.0'
+__status__          = 'Development'
+__doc__             = 'The Replacement Policy Simulator helps simulate a fully associative or set \
+					   associative cache to estimate the hit rate for various replacement policies'
+
+import os,sys, time
 sys.path.insert(0, os.getcwd() + os.path.sep + 'src')
 
 from simulation import Simulation
-from fileparser import Parse
-from genmem     import GenRandomAccesses
 from logger     import InitializeLogger
-
-def MemFromFile(filename):
-    return Parse('mem/sample_mem.txt')
-
-def RandomMem(size, max_address, save_mem=False):
-    return GenRandomAccesses(100, max_address, save_mem)
 
 def main():
 
+	# Save initial start time 
+    start_time = time.time()
+
     InitializeLogger()
 
-    mem_accesses = RandomMem(100, 100)
+    Simulation()
 
-    Simulation(mem_accesses)
+    time_dif = (time.time() - start_time) / 60
+
+    print('\nTesting Complete ({:.2f} minutes)\n'.format(time_dif))
 
 if __name__ == '__main__':
     main()

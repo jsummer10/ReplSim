@@ -20,10 +20,13 @@ class Summary():
 
     def __init__(self, sim_list):
 
+        print('Processing Results')
+
         self.sim_list = sim_list
 
         self.CreateWorkbook()
         self.CreateFormats()
+        self.SortSims()
         self.WriteSummaryData()
         self.WriteCacheData()
         self.CloseWorkbook()
@@ -43,9 +46,18 @@ class Summary():
     def CreateFormats(self):
         """ Create formats to be used in excel spreadsheet """
 
-        self.heading    = self.sim_workbook.add_format({'bold': True, 'align': 'center', 'valign': 'vcenter', 'bg_color': '#DADADA', 'border':1})
+        self.heading    = self.sim_workbook.add_format({'bold': True, 'align': 'center', 'valign': 'vcenter', 
+                                                        'bg_color': '#DADADA', 'border':1})
+
         self.data       = self.sim_workbook.add_format({'align': 'center', 'valign': 'vcenter', 'border':1}) 
-        self.percent    = self.sim_workbook.add_format({'num_format': '0.00%', 'align':'center', 'valign': 'vcenter', 'border':1})
+        
+        self.percent    = self.sim_workbook.add_format({'num_format': '0.00%', 'align':'center', 'valign': 'vcenter', 
+                                                        'border':1})
+
+    def SortSims(self):
+        """ Sort sims in alphabetical order """
+
+        self.sim_list.sort(key=lambda x: x['cache'].config_name)
 
     def WriteSummaryData(self):
         """ Write a list to the summary sheet """
@@ -100,8 +112,8 @@ class Summary():
             for line in cache_obj.cache:
                 x_cur = x
                 for way in range(0,len(line)):
-                    if line[way]['tag'] is None:
-                        cache_sheet.write(y, x_cur, 'set ' + str(way), self.data)
+                    if line[way] is None or line[way]['tag'] is None:
+                        cache_sheet.write(y, x_cur, 'empty', self.data)
                     else:
                         cache_sheet.write(y, x_cur, hex(line[way]['tag']), self.data)
 
