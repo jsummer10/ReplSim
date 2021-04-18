@@ -33,15 +33,15 @@ class ReplacementPolicy():
     def LRU(self, cache, address_index):
         """ perform a least recently used replacement """ 
         
-        min_value = cache[0][address_index]['recency_index']
-        
-        for line in cache:
-            if line[address_index]['recency_index'] < min_value:
-                min_value = line[address_index]['recency_index']
+        min_value = None
+        min_index = None
 
         for index, line in enumerate(cache):
-            if line[address_index]['recency_index'] == min_value:
-                return index
+            if min_value is None or line[address_index]['recency_index'] < min_value:
+                min_value = line[address_index]['recency_index']
+                min_index = index
+
+        return min_index
 
     def RR(self, cache):
         """ perform a random replacement """ 
@@ -82,12 +82,11 @@ class ReplacementPolicy():
 
         # Perform least recently used analysis
         min_value = None
-        for line in cache:
+        min_index = None
+        for index, line in enumerate(cache):
             if line[address_index]['tag'] in least_used_tags:
                 if min_value is None or line[address_index]['recency_index'] < min_value:
                     min_value = line[address_index]['recency_index']
+                    min_index = index
 
-        for index, line in enumerate(cache):
-            if line[address_index]['tag'] in least_used_tags:
-                if line[address_index]['recency_index'] == min_value:
-                    return index
+        return min_index

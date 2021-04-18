@@ -50,19 +50,19 @@ class Simulation():
 
     def LRUSim(self):
         """ Sim with LRU, 2-way set associative """
-        return Cache(config_name='LRU Cache', repl='LRU', ways=2)
+        return Cache(config_name='LRU Cache', repl='LRU', ways=4)
 
     def RRSim(self):
         """ Sim with RR, 2-way set associative """
-        return Cache(config_name='RR Cache', repl='RR', ways=2)
+        return Cache(config_name='RR Cache', repl='RR', ways=4)
 
     def LFRUSim(self):
         """ Sim with LFRU, 2-way set associative """
-        return Cache(config_name='LFRU Cache', repl='LFRU', ways=2)
+        return Cache(config_name='LFRU Cache', repl='LFRU', ways=4)
 
     def LFUSim(self):
         """ Sim with LFU, 2-way set associative """
-        return Cache(config_name='LFU Cache', repl='LFU', ways=2)
+        return Cache(config_name='LFU Cache', repl='LFU', ways=4)
 
 
 class myThread (threading.Thread):

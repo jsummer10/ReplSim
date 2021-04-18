@@ -19,8 +19,8 @@ class CacheConfig(dict):
         self.cache_config = { 'mem_size'      : 2000,
                               'mem_max'       : 2000,
                               'address_size'  : 32 * b,
-                              'cache_size'    : 64 * KB,
-                              'line_size'     : 4 * B
+                              'cache_size'    : 8 * KB,
+                              'line_size'     : 32 * B
                             }
 
     def __getitem__(self, key):
