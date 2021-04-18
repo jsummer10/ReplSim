@@ -11,7 +11,6 @@ Description : The file contains the main functions to run
 import os,sys
 sys.path.insert(0, os.getcwd() + os.path.sep + 'src')
 
-from cache      import Cache
 from simulation import Simulation
 from fileparser import Parse
 from genmem     import GenRandomAccesses
@@ -26,12 +25,9 @@ def RandomMem(size, max_address, save_mem=False):
 def main():
     mem_accesses = RandomMem(100, 100, True)
 
-    cache = Cache()
-    cache.FullyAssociativeCache()
-
     CreateWorkbook()
 
-    Simulation(cache, mem_accesses)
+    Simulation(mem_accesses)
 
     CloseWorkbook()
 

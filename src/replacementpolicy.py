@@ -8,21 +8,25 @@ Description : This file contains the replacement policy algorithms
               that will be used
 '''
 
+import random
+
 class ReplacementPolicy():
     """ This class defines the replacement policy that 
         will be used in the cache
     """
 
     def __init__(self, repl):
-        self.repl = 'LRU'
+        self.repl = repl
 
-    def Replace(self, cache, address):
+    def Replace(self, cache):
         """ Pass to selected replacement policy """
 
         if self.repl == 'LRU':
-            return self.LRU(cache, address)
+            return self.LRU(cache)
+        elif self.repl == 'Random':
+            return self.Random(cache)
 
-    def LRU(self, cache, address):
+    def LRU(self, cache):
         """ perform a least recently used replacement """ 
         
         min_value = cache[0][0]
@@ -34,3 +38,8 @@ class ReplacementPolicy():
         for index, line in enumerate(cache):
             if line[0] == min_value:
                 return index
+
+    def Random(self, cache):
+        """ perform a random replacement """ 
+        
+        return random.randint(0, len(cache)-1)

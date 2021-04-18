@@ -29,3 +29,11 @@ def SaveToFile(data):
         f.write(str(item) + '\n')
 
     f.close()
+
+if __name__ == '__main__':
+
+    size = 100
+    max_address = 100
+    save_mem = True
+
+    GenRandomAccesses(size, max_address, save_mem)

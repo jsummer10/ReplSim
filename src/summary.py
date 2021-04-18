@@ -32,28 +32,33 @@ def CreateSummarySheet():
 
     sum_sheet = sim_workbook.add_worksheet('Simulation Summary')
 
-def WriteSummary(y, x, data):
+def WriteSummaryData(y, x, data):
     """ Write a list to the summary sheet """
     sum_sheet.write_row(y, x, data)
 
-def CreateCacheSheet(cache):
-    """ Create excel sheet for the cache """
+def CreateCacheSheet():
+    """ Create excel sheet for the summary """
+
+    global cache_sheet
 
     cache_sheet = sim_workbook.add_worksheet('Cache')
 
-    cache_sheet.write(1, 1, 'Use Index')
+def WriteCacheData(x, cache, title):
+    """ Create excel sheet for the cache """
+
+    cache_sheet.write(1, x, title)
+
+    cache_sheet.write(2, x, 'Use Index')
 
     for i in range(1, len(cache[0])):
-        cache_sheet.write(1, i+1, 'Block ' + str(i))
+        cache_sheet.write(2, i+x, 'Block ' + str(i))
 
-    y = 2
+    y = 3
     for line in cache:
-        cache_sheet.write(y, 1, line[0])
-        for x in range(1,len(line)):
-            cache_sheet.write(y, x+1, hex(line[x]))
+        cache_sheet.write(y, x, line[0])
+        for i in range(1,len(line)):
+            cache_sheet.write(y, i+x, hex(line[i]))
         y += 1
-            
-
 
 def CloseWorkbook():
     sim_workbook.close()

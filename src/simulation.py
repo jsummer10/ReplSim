@@ -8,25 +8,37 @@ Description : This file contains the simulation class that will
               run all simulations
 '''
 
-from summary import CreateSummarySheet, WriteSummary
+from cache      import Cache
+from summary    import CreateSummarySheet, WriteSummaryData, CreateCacheSheet
 
 class Simulation():
     """ This class defines the simulation environment """
 
-    def __init__(self, cache, mem_accesses):
-        self.Run(cache, mem_accesses)
+    def __init__(self, mem_accesses):
+        self.mem_accesses = mem_accesses
 
-    def Run(self, cache, mem_accesses):
+        self.Run()
+
+    def Run(self):
         """ Run simulation """
 
         CreateSummarySheet()
+        CreateCacheSheet()
+
+        self.LRUSim()
+        self.RandomSim()
+
+    def LRUSim(self):
+        """ Run LRU Simulation """
+
+        cache = Cache('LRU')
 
         self.misses = 0
         self.hits   = 0
 
         history = []
 
-        for access in mem_accesses:
+        for access in self.mem_accesses:
             if cache.L1CacheAccess(access):
                 self.hits += 1
                 history.append([hex(access), 'Hit'])
@@ -34,21 +46,43 @@ class Simulation():
                 self.misses += 1
                 history.append([hex(access), 'Miss'])
 
-        cache.WriteCache()
+        cache.WriteCache(1, 'LRU Cache')
+        self.WriteStats(1, history, 'LRU Stats')
 
-        self.WriteStats(history)
+    def RandomSim(self):
+        """ Run Random Simulation """
 
-    def WriteStats(self, history):
+        cache = Cache('Random')
+
+        self.misses = 0
+        self.hits   = 0
+
+        history = []
+
+        for access in self.mem_accesses:
+            if cache.L1CacheAccess(access):
+                self.hits += 1
+                history.append([hex(access), 'Hit'])
+            else:
+                self.misses += 1
+                history.append([hex(access), 'Miss'])
+
+        cache.WriteCache(4, 'Random Cache')
+        self.WriteStats(4, history, 'Random Stats')
+
+    def WriteStats(self, x, history, title):
         """ Prints simulation statistics """ 
 
         hit_rate = self.hits / (self.misses + self.hits)
 
-        WriteSummary(1, 1, ['Hits:', self.hits])
-        WriteSummary(2, 1, ['Misses:', self.misses])
-        WriteSummary(3, 1, ['Hit Rate:', '{:0.2f}%'.format(hit_rate * 100)])
+        WriteSummaryData(1, x, [title])
 
-        y = 5
+        WriteSummaryData(2, x, ['Hits:', self.hits])
+        WriteSummaryData(3, x, ['Misses:', self.misses])
+        WriteSummaryData(4, x, ['Hit Rate:', '{:0.2f}%'.format(hit_rate * 100)])
+
+        y = 6
 
         for access in history:
-            WriteSummary(y, 1, access)
+            WriteSummaryData(y, x, access)
             y += 1

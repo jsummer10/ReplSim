@@ -10,15 +10,16 @@ Description : This file contains the cache class which will
 
 import sys
 from replacementpolicy  import ReplacementPolicy
-from summary            import CreateCacheSheet
+from summary            import WriteCacheData
 
 class Cache():
     """ This class defines the cache that will be simulated """
 
-    def __init__(self):
-        self.Configure()
+    def __init__(self, repl):
+        self.Configure(repl)
+        self.FullyAssociativeCache()
 
-    def Configure(self):
+    def Configure(self, repl):
         """ Configure cache """
 
         # Values in bytes
@@ -26,7 +27,7 @@ class Cache():
         self.line_size    = 4   # Has to be power of 2 and less than cache size
         self.cache_index  = 1
 
-        self.repl_policy  = ReplacementPolicy('LRU')
+        self.repl_policy  = ReplacementPolicy(repl)
 
     def FullyAssociativeCache(self):
         """ Creates empty fully associative cache """
@@ -59,7 +60,7 @@ class Cache():
                 self.cache_index += 1
                 return False
 
-        repl_index = self.repl_policy.Replace(self.cache, address)
+        repl_index = self.repl_policy.Replace(self.cache)
 
         if repl_index is None:
             return False
@@ -82,8 +83,8 @@ class Cache():
 
             print()
 
-    def WriteCache(self):
-        CreateCacheSheet(self.cache)
+    def WriteCache(self, x, title):
+        WriteCacheData(x, self.cache, title)
 
 
 
