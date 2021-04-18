@@ -8,9 +8,32 @@ Description : The file contains the main functions to run
               the simulations 
 '''
 
-def main():
-    return
+import os,sys
+sys.path.insert(0, os.getcwd() + os.path.sep + 'src')
 
+from cache      import Cache
+from simulation import Simulation
+from fileparser import Parse
+from genmem     import GenRandomAccesses
+from summary    import CreateWorkbook, CloseWorkbook
+
+def MemFromFile(filename):
+    return Parse('mem/sample_mem.txt')
+
+def RandomMem(size, max_address, save_mem=False):
+    return GenRandomAccesses(100, max_address, save_mem)
+
+def main():
+    mem_accesses = RandomMem(100, 100, True)
+
+    cache = Cache()
+    cache.FullyAssociativeCache()
+
+    CreateWorkbook()
+
+    Simulation(cache, mem_accesses)
+
+    CloseWorkbook()
 
 if __name__ == '__main__':
     main()
