@@ -10,33 +10,95 @@ Description : The file contains functionality to generate
 
 import random
 
-def GenRandomAccesses(size, max_address, save_mem):
-    """ Generates a list of random memory addresses to use """
+class MemoryGenerator():
+    """ This class will generate a memory file to be used """
 
-    mem_accesses = []
+    def __init__(self):
+        self.memory = []
 
-    for i in range(0, size):
-        mem_accesses.append(4 * random.randint(0, max_address))
+    def GenerateMemory(self, size, max_address, save_mem):
+        """ Generates a list of random memory addresses to use """
 
-    if save_mem:
-        SaveToFile(mem_accesses)
+        self.size = size
+        self.max_address = max_address
 
-    return mem_accesses
+        self.memory = []
 
-def SaveToFile(data):
-    """ Save memory list as a txt file for later use """
+        self.InitialMemory()
 
-    f = open("mem/random_mem.txt", "w")
+        self.InjectRandomLoop(num_loops=int(self.size / 40), loop_size=6)
 
-    for item in data:
-        f.write(str(item) + '\n')
+        self.InjectIncrementLoop(num_loops=int(self.size / 40), loop_size=8, increment=4)
+        self.InjectIncrementLoop(num_loops=int(self.size / 40), loop_size=8, increment=12)
 
-    f.close()
+        self.InjectRepetition(int(self.size / 40))
+        self.InjectRepetition(int(self.size / 40))
+        self.InjectRepetition(int(self.size / 40))
+        self.InjectRepetition(int(self.size / 40))
+        self.InjectRepetition(int(self.size / 40))
 
-if __name__ == '__main__':
+        if save_mem:
+            self.SaveToFile()
 
-    size = 100
-    max_address = 100
-    save_mem = True
+        return self.memory
 
-    GenRandomAccesses(size, max_address, save_mem)
+    def InitialMemory(self):
+        """ Generates a list of random numbers from 0 to max_address """
+        for i in range(0, self.size):
+            self.memory.append(4 * random.randint(0, self.max_address))
+
+    def InjectRandomLoop(self, num_loops, loop_size):
+        """ Inject a loop of random values into memory """
+
+        loop = []
+
+        for i in range(0, loop_size):
+            loop.append(4 * random.randint(0, self.max_address))
+
+        for i in range(0, num_loops):
+            random_index = random.randint(0, self.size - loop_size - 1)
+
+            for x in range(0, loop_size):
+                self.memory[random_index + x] = loop[x]
+
+    def InjectIncrementLoop(self, num_loops, loop_size, increment):
+        """ Inject a loop of incremented values into memory """
+
+        loop = []
+
+        first_loop_value = 4 * random.randint(0, self.max_address)
+
+        for i in range(0, loop_size):
+            loop.append(first_loop_value + (i * increment))
+
+        for i in range(0, num_loops):
+            random_index = random.randint(0, self.size - loop_size - 1)
+
+            for x in range(0, loop_size):
+                self.memory[random_index + x] = loop[x]
+
+    def InjectRepetition(self, num_occur):
+
+        index = random.randint(0, self.size - 1)
+        value = 4 * random.randint(0, self.max_address)
+
+        for i in range(0, num_occur):
+            self.memory[index] = value
+
+    def SaveToFile(self):
+        """ Save memory list as a txt file for later use """
+
+        f = open("mem/random_mem.txt", "w")
+
+        for item in self.memory:
+            f.write(str(item) + '\n')
+
+        f.close()
+
+    if __name__ == '__main__':
+
+        size = 100
+        max_address = 100
+        save_mem = True
+
+        GenRandomAccesses(size, max_address, save_mem)

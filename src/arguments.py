@@ -9,7 +9,7 @@ Description : This file contains the functionality to parse CLI arguments
 
 import argparse, os, sys
 
-from genmem     import GenRandomAccesses
+from genmem     import MemoryGenerator
 from fileparser import Parse
 from config     import cache_config
 
@@ -44,7 +44,8 @@ def MemFromFile(filename):
 
 def RandomMem(size, max_address, save_mem=False):
     cache_config['mem_type'] = 'Generated'
-    return GenRandomAccesses(size, max_address, save_mem)
+    gen_mem = MemoryGenerator()
+    return gen_mem.GenerateMemory(size, max_address, save_mem)
 
 def ReadArguments():
     """ Read in command line arguments """
@@ -75,7 +76,7 @@ def ReadArguments():
                 print('Unable to convert', args.memrange, 'to an integer')
                 sys.exit()
 
-            cache_config['memory'] = RandomMem(size=memsize, max_address=memrange)
+            cache_config['memory'] = RandomMem(size=memsize, max_address=memrange, save_mem=True)
 
         if args.memsize and not args.memrange:
             try:
@@ -84,7 +85,7 @@ def ReadArguments():
                 print('Unable to convert', args.memsize, 'to an integer')
                 sys.exit()
 
-            cache_config['memory'] = RandomMem(size=memsize, max_address=DEFAULT_MEMRANGE)
+            cache_config['memory'] = RandomMem(size=memsize, max_address=DEFAULT_MEMRANGE, save_mem=True)
 
         if not args.memsize and args.memrange:
             try:
@@ -93,11 +94,11 @@ def ReadArguments():
                 print('Unable to convert', args.memrange, 'to an integer')
                 sys.exit()
 
-            cache_config['memory'] = RandomMem(size=DEFAULT_MEMSIZE, max_address=memrange)
+            cache_config['memory'] = RandomMem(size=DEFAULT_MEMSIZE, max_address=memrange, save_mem=True)
 
     # Generate random memory using defaults
     if not args.file and not args.memsize and not args.memrange:
-        cache_config['memory'] = RandomMem(size=DEFAULT_MEMSIZE, max_address=DEFAULT_MEMRANGE)
+        cache_config['memory'] = RandomMem(size=DEFAULT_MEMSIZE, max_address=DEFAULT_MEMRANGE, save_mem=True)
 
     # Set cache size using CLI argument
     if args.cachesize:

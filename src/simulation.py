@@ -11,8 +11,6 @@ Description : This file contains the simulation class that will
 import sys, threading
 from cache      import Cache
 from summary    import Summary
-from genmem     import GenRandomAccesses
-from fileparser import Parse
 from config     import cache_config
 
 class Simulation():
