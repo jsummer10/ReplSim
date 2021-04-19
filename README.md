@@ -2,13 +2,20 @@
 
 # 1 Overview 
 
-## Memory Input
+## Configuration
 
-Memory can either be read from a file or a randomly generated memory file. This randomly generated memory file can also be saved for later use
+Memory can be...
+
+- Read from a file
+- Randomly generated
+
+The memory and cache sizes can be configured in src/config.py. 
+
+The simulations that will be ran can be changed in src/simulation.py. This file will allow you to add/remove simulations along with change the replacement policy and the set associativity.
 
 ## Output
 
-Data will be saved to an excel workbook in the output folder
+Data will be saved to an excel workbook and a graph demonstrating the hit ratio. These will be located in the output folder
 
 ## Supported Replacement Policies
 

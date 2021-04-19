@@ -25,7 +25,7 @@ class Simulation():
     """ This class defines the simulation environment """
 
     def __init__(self):
-        self.Setup()
+        #self.Setup()
         self.Run()
 
     def Setup(self):
@@ -36,34 +36,30 @@ class Simulation():
 
         sim_configs = []
 
-        sim_configs.append(self.LRUSim())
-        sim_configs.append(self.RRSim())
-        sim_configs.append(self.LFRUSim())
-        sim_configs.append(self.LFUSim())
+        #--------------------------------
+        # Start of Simulations to be run
+        #--------------------------------
+
+        sim_configs.append(Cache(config_name='LRU Cache (2-way)',   repl='LRU',     ways=2))
+        sim_configs.append(Cache(config_name='RR Cache (2-way)',    repl='RR',      ways=2))
+        sim_configs.append(Cache(config_name='LFRU Cache (2-way)',  repl='LFRU',    ways=2))
+        sim_configs.append(Cache(config_name='LFU Cache (2-way)',   repl='LFU',     ways=2))
+
+        sim_configs.append(Cache(config_name='LRU Cache (4-way)',   repl='LRU',     ways=4))
+        sim_configs.append(Cache(config_name='RR Cache (4-way)',    repl='RR',      ways=4))
+        sim_configs.append(Cache(config_name='LFRU Cache (4-way)',  repl='LFRU',    ways=4))
+        sim_configs.append(Cache(config_name='LFU Cache (4-way)',   repl='LFU',     ways=4))
+
+        #--------------------------------
+        #  End of Simulations to be run
+        #--------------------------------
 
         global sim_results
         sim_results = []
 
-        StartSimulations(sim_configs, self.mem_accesses)
+        StartSimulations(sim_configs, cache_config['memory'])
 
         sim_summary = Summary(sim_results)
-
-    def LRUSim(self):
-        """ Sim with LRU, 2-way set associative """
-        return Cache(config_name='LRU Cache', repl='LRU', ways=4)
-
-    def RRSim(self):
-        """ Sim with RR, 2-way set associative """
-        return Cache(config_name='RR Cache', repl='RR', ways=4)
-
-    def LFRUSim(self):
-        """ Sim with LFRU, 2-way set associative """
-        return Cache(config_name='LFRU Cache', repl='LFRU', ways=4)
-
-    def LFUSim(self):
-        """ Sim with LFU, 2-way set associative """
-        return Cache(config_name='LFU Cache', repl='LFU', ways=4)
-
 
 class myThread (threading.Thread):
     """ This class enables multithreading capabilities """
