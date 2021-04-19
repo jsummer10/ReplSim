@@ -15,49 +15,44 @@ from genmem     import GenRandomAccesses
 from fileparser import Parse
 from config     import cache_config
 
-def MemFromFile(filename):
-    return Parse('mem/sample_mem.txt')
-
-def RandomMem(size, max_address, save_mem=False):
-    return GenRandomAccesses(size, max_address, save_mem)
-
 class Simulation():
     """ This class defines the simulation environment """
 
     def __init__(self):
-        #self.Setup()
+        self.PrintConfiguration()
+        self.SimConfig()
         self.Run()
 
-    def Setup(self):
-        self.mem_accesses = RandomMem(cache_config['mem_size'], cache_config['mem_max'])
+    def PrintConfiguration(self):
+        """ Prints build configuration to command line """
 
-    def Run(self):
+        print('Cache Configuration...')
+        print('Memory Type:', cache_config['mem_type'])
+        print('Cache Size:', cache_config['cache_size'], 'bytes')
+        print('Line Size:', cache_config['line_size'], 'bytes')
+        print('Address Size:', cache_config['address_size'], 'bits')
+
+    def SimConfig(self):
         """ Setup and process simulation """
 
-        sim_configs = []
+        self.sim_configs = []
 
-        #--------------------------------
-        # Start of Simulations to be run
-        #--------------------------------
+        self.sim_configs.append(Cache(config_name='LRU Cache (2-way)',   repl='LRU',     ways=2))
+        self.sim_configs.append(Cache(config_name='RR Cache (2-way)',    repl='RR',      ways=2))
+        self.sim_configs.append(Cache(config_name='LFRU Cache (2-way)',  repl='LFRU',    ways=2))
+        self.sim_configs.append(Cache(config_name='LFU Cache (2-way)',   repl='LFU',     ways=2))
 
-        sim_configs.append(Cache(config_name='LRU Cache (2-way)',   repl='LRU',     ways=2))
-        sim_configs.append(Cache(config_name='RR Cache (2-way)',    repl='RR',      ways=2))
-        sim_configs.append(Cache(config_name='LFRU Cache (2-way)',  repl='LFRU',    ways=2))
-        sim_configs.append(Cache(config_name='LFU Cache (2-way)',   repl='LFU',     ways=2))
+        self.sim_configs.append(Cache(config_name='LRU Cache (4-way)',   repl='LRU',     ways=4))
+        self.sim_configs.append(Cache(config_name='RR Cache (4-way)',    repl='RR',      ways=4))
+        self.sim_configs.append(Cache(config_name='LFRU Cache (4-way)',  repl='LFRU',    ways=4))
+        self.sim_configs.append(Cache(config_name='LFU Cache (4-way)',   repl='LFU',     ways=4))
 
-        sim_configs.append(Cache(config_name='LRU Cache (4-way)',   repl='LRU',     ways=4))
-        sim_configs.append(Cache(config_name='RR Cache (4-way)',    repl='RR',      ways=4))
-        sim_configs.append(Cache(config_name='LFRU Cache (4-way)',  repl='LFRU',    ways=4))
-        sim_configs.append(Cache(config_name='LFU Cache (4-way)',   repl='LFU',     ways=4))
-
-        #--------------------------------
-        #  End of Simulations to be run
-        #--------------------------------
+    def Run(self):
 
         global sim_results
         sim_results = []
 
-        StartSimulations(sim_configs, cache_config['memory'])
+        StartSimulations(self.sim_configs, cache_config['memory'])
 
         sim_summary = Summary(sim_results)
 

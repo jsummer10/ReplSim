@@ -8,6 +8,8 @@ Description : The file contains the functionality to
               parse input files
 '''
 
+import sys
+
 def Parse(filename):
 
     try:
@@ -24,6 +26,12 @@ def Parse(filename):
         if (line == '\n' or line == ''):
             continue
         
+        try:
+            line = int(line)
+        except:
+            print('Memory files can only contain integers')
+            sys.exit()
+
         input_data.append(line)
 
     return input_data

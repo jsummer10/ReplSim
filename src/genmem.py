@@ -11,6 +11,7 @@ Description : The file contains functionality to generate
 import random
 
 def GenRandomAccesses(size, max_address, save_mem):
+    """ Generates a list of random memory addresses to use """
 
     mem_accesses = []
 
@@ -23,6 +24,8 @@ def GenRandomAccesses(size, max_address, save_mem):
     return mem_accesses
 
 def SaveToFile(data):
+    """ Save memory list as a txt file for later use """
+
     f = open("mem/random_mem.txt", "w")
 
     for item in data:

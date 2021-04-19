@@ -15,20 +15,23 @@ __credits__         = ['Jake Summerville, Henry Lee, Martin Lopez, Fausto Sanche
 __version__         = '1.0.0'
 __status__          = 'Development'
 __doc__             = 'The Replacement Policy Simulator helps simulate a fully associative or set \
-					   associative cache to estimate the hit rate for various replacement policies'
+                       associative cache to estimate the hit rate for various replacement policies'
 
 import os,sys, time
 sys.path.insert(0, os.getcwd() + os.path.sep + 'src')
 
 from simulation import Simulation
 from logger     import InitializeLogger
+from arguments  import ReadArguments
 
 def main():
 
-	# Save initial start time 
+    # Save initial start time 
     start_time = time.time()
 
     InitializeLogger()
+  
+    ReadArguments()
 
     Simulation()
 
