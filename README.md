@@ -2,6 +2,14 @@
 
 # 1 Overview 
 
+## Dependencies
+
+The following dependencies will need to be installed
+
+``` 
+pip3 install xlsxwriter plotly
+```
+
 ## Configuration
 
 Memory can be...
