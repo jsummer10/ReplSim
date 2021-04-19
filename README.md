@@ -32,25 +32,25 @@ Data will be saved to an excel workbook and a graph demonstrating the hit ratio.
 ## Supported Replacement Policies
 
 - LRU: Least Recently Used
-	- Discards the least recently used items first.
+    - Discards the least recently used items first.
 - RR: Random Replacement
-	- Randomly chooses which item to discard
+    - Randomly chooses which item to discard
 - LFRU: Least Frequently Recently Used
-	- Replaces an item with the least usage and the least recently used
+    - Replaces an item with the least usage and the least recently used
 - LFU: Least Frequently Used
-	- Replaces an item with the least usage
+    - Replaces an item with the least usage
 
 # 2 Running
 
 ## Command Line Arguments
 
-Short | Long        | Description
-------|-------------|----------------------------------------
--f    | --file      | Input file containing memory addresses
-      | --memsize   | Size of memory file to be generated
-      | --memrange  | Max memory value to be generated
-      | --cachesize | Size of the cache 
-      | --linesize  | Size of the cache line
+| Long        | Description                             |
+|-------------|-----------------------------------------|
+| --file      | Input file containing memory addresses  |
+| --memsize   | Size of memory file to be generated     |
+| --memrange  | Max memory value to be generated        |
+| --cachesize | Size of the cache                       |
+| --linesize  | Size of the cache line                  |
       
 All arguments are optional. memsize and memrange are used when auto generating a memory file. file is used to read in a memory file. memsize and memrange can't be used with file. 
 
