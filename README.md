@@ -42,21 +42,24 @@ Data will be saved to an excel workbook and a graph demonstrating the hit ratio.
 - LFU: Least Frequently Used
     - Replaces an item with the least usage
 - FIFO: First On First Out
-	- Replace the item that was added first with no regard to its usage
+    - Replace the item that was added first with no regard to its usage
 
 # 2 Running
 
 ## Command Line Arguments
 
-| Long        | Description                             |
-|-------------|-----------------------------------------|
-| --file      | Input file containing memory addresses  |
-| --memsize   | Size of memory file to be generated     |
-| --memrange  | Max memory value to be generated        |
-| --cachesize | Size of the cache                       |
-| --linesize  | Size of the cache line                  |
+| Long        | Description                                 |
+|-------------|---------------------------------------------|
+| --file      | Input file containing memory addresses      |
+| --memsize   | Size of memory file to be generated         |
+| --memrange  | Max memory value to be generated            |
+| --cachesize | Size of the cache                           |
+| --linesize  | Size of the cache line                      |
+| --mult      | Run simulation a specified number of times  |
       
 All arguments are optional. memsize and memrange are used when auto generating a memory file. file is used to read in a memory file. memsize and memrange can't be used with file. 
+
+When running mult, specify a positive integer. This setting cannot be used with file. Each new sim will generate a completely new memory file to use.
 
 
 ## Examples
@@ -77,6 +80,12 @@ Running with a configured cache
 
 ```
 python3 run.py --cachesize 64KB --linesize 32B
+```
+
+Running multiple simulations
+
+```
+python3 run.py --mult 3
 ```
 
 # Authors

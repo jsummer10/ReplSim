@@ -16,7 +16,7 @@ class MemoryGenerator():
     def __init__(self):
         self.memory = []
 
-    def GenerateMemory(self, size, max_address, save_mem):
+    def GenerateMemory(self, size, max_address, filename, save_mem):
         """ Generates a list of random memory addresses to use """
 
         self.size = size
@@ -38,7 +38,7 @@ class MemoryGenerator():
         self.InjectRepetition(int(self.size / 40))
 
         if save_mem:
-            self.SaveToFile()
+            self.SaveToFile(filename)
 
         return self.memory
 
@@ -85,10 +85,10 @@ class MemoryGenerator():
         for i in range(0, num_occur):
             self.memory[index] = value
 
-    def SaveToFile(self):
+    def SaveToFile(self, filename):
         """ Save memory list as a txt file for later use """
 
-        f = open("mem/random_mem.txt", "w")
+        f = open('mem/' + filename, "w")
 
         for item in self.memory:
             f.write(str(item) + '\n')

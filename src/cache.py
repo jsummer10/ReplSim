@@ -44,7 +44,7 @@ class Cache():
                 way_list.append(None)
             self.cache.append(way_list)
 
-        self.LogConfig()
+        #self.LogConfig()
 
         self.usage_index = []
         for i in range(0, self.ways):
@@ -66,7 +66,7 @@ class Cache():
         else:
             address_index  = int(address_bits[self.tag_bits : self.tag_bits + self.index_bits], 2)
 
-        self.LogCache(address_tag)
+        #self.LogCache(address_tag)
 
         # Check if tag is in cache
         for index, line in enumerate(self.cache):

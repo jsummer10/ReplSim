@@ -35,17 +35,18 @@ def ParseArguments():
     parser.add_argument('--memrange',   help='Max range of memory in generated memory')
     parser.add_argument('--cachesize',  help='Cache size to be used')
     parser.add_argument('--linesize',   help='Cache line size to be used')
+    parser.add_argument('--mult',       help='Run an entered number of simulations back-to-back')
 
     return parser.parse_args()
 
 def MemFromFile(filename):
     cache_config['mem_type'] = 'File'
-    return Parse('mem/sample_mem.txt')
+    return Parse(filename)
 
-def RandomMem(size, max_address, save_mem=False):
+def RandomMem(size, max_address, filename, save_mem=False):
     cache_config['mem_type'] = 'Generated'
     gen_mem = MemoryGenerator()
-    return gen_mem.GenerateMemory(size, max_address, save_mem)
+    return gen_mem.GenerateMemory(size, max_address, filename, save_mem)
 
 def ReadArguments():
     """ Read in command line arguments """
@@ -76,29 +77,37 @@ def ReadArguments():
                 print('Unable to convert', args.memrange, 'to an integer')
                 sys.exit()
 
-            cache_config['memory'] = RandomMem(size=memsize, max_address=memrange, save_mem=True)
+            cache_config['mem_size']  = memsize
+            cache_config['mem_range'] = memrange
 
-        if args.memsize and not args.memrange:
+        elif args.memsize and not args.memrange:
             try:
                 memsize = int(args.memsize)
             except:
                 print('Unable to convert', args.memsize, 'to an integer')
                 sys.exit()
 
-            cache_config['memory'] = RandomMem(size=memsize, max_address=DEFAULT_MEMRANGE, save_mem=True)
+            cache_config['mem_size']  = memsize
+            cache_config['mem_range'] = DEFAULT_MEMRANGE
 
-        if not args.memsize and args.memrange:
+        elif not args.memsize and args.memrange:
             try:
                 memrange = int(args.memrange)
             except:
                 print('Unable to convert', args.memrange, 'to an integer')
                 sys.exit()
 
-            cache_config['memory'] = RandomMem(size=DEFAULT_MEMSIZE, max_address=memrange, save_mem=True)
+            cache_config['mem_size']  = DEFAULT_MEMSIZE
+            cache_config['mem_range'] = memrange
 
-    # Generate random memory using defaults
-    if not args.file and not args.memsize and not args.memrange:
-        cache_config['memory'] = RandomMem(size=DEFAULT_MEMSIZE, max_address=DEFAULT_MEMRANGE, save_mem=True)
+        else:
+            cache_config['mem_size']  = DEFAULT_MEMSIZE
+            cache_config['mem_range'] = DEFAULT_MEMRANGE
+
+        cache_config['memory']  = RandomMem(size=cache_config['mem_size'], 
+                                            max_address=cache_config['mem_range'], 
+                                            filename='gen_mem',
+                                            save_mem=True)
 
     # Set cache size using CLI argument
     if args.cachesize:
@@ -203,6 +212,20 @@ def ReadArguments():
             else:
                 print('Unable to understand the line size of', args.linesize)
                 sys.exit()
+
+    if args.mult:
+
+        try:
+            multiple = int(args.mult)
+        except:
+            print('Unable to convert mult (', args.mult, ') to an integer')
+            sys.exit()
+
+        if multiple < 1:
+            print('Mult has to be greater than or equal to zero')
+            sys.exit()
+
+        cache_config['mult_sims'] = multiple
 
 
 

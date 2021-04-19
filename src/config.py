@@ -20,9 +20,12 @@ class CacheConfig(dict):
     def __init__(self):
         self.cache_config = { 'memory'        : None,
                               'mem_type'      : '',
+                              'mem_size'      : None,
+                              'mem_range'     : None,
                               'address_size'  : 32 * b,
                               'cache_size'    : 8 * KB,
-                              'line_size'     : 32 * B
+                              'line_size'     : 32 * B,
+                              'mult_sims'     : 1,
                             }
 
     def __getitem__(self, key):
@@ -33,10 +36,15 @@ class CacheConfig(dict):
             print("\nKeyError: '{}' does not exist in settings".format(key))
             print('The following keys exist:')
             print('\tmemory')
+            print('\tmem_type')
+            print('\tmem_range')
+            print('\tmem_size')
+            print('\tmem_range')
             print('\taddress_size')
             print('\tcache_size')
             print('\tline_size')
-
+            print('\tmult_sims')
+            
             sys.exit()
 
         self.cache_config[key] = value
