@@ -29,6 +29,10 @@ class ReplacementPolicy():
             return self.LFRU(cache, address_index, usage_index)
         elif self.repl == 'LFU':
             return self.LFU(cache, address_index, usage_index)
+        elif self.repl == 'FIFO':
+            return self.FIFO(cache, address_index)
+        elif self.repl == 'MRU':
+            return self.MRU(cache, address_index)
 
     def LRU(self, cache, address_index):
         """ perform a least recently used replacement """ 
@@ -90,3 +94,29 @@ class ReplacementPolicy():
                     min_index = index
 
         return min_index
+
+    def FIFO(self, cache, address_index):
+        """ perform a first in, first out replacement """ 
+        
+        min_value = None
+        min_index = None
+
+        for index, line in enumerate(cache):
+            if min_value is None or line[address_index]['added_index'] < min_value:
+                min_value = line[address_index]['added_index']
+                min_index = index
+
+        return min_index
+
+    def MRU(self, cache, address_index):
+        """ perform a most recently used replacement """ 
+        
+        max_value = None
+        max_index = None
+
+        for index, line in enumerate(cache):
+            if max_value is None or line[address_index]['recency_index'] > max_value:
+                max_value = line[address_index]['recency_index']
+                max_index = index
+
+        return max_index

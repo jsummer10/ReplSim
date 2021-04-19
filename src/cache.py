@@ -51,6 +51,7 @@ class Cache():
             self.usage_index.append(dict())
 
         self.recency_index = 1
+        self.added_index = 1
 
     def L1CacheAccess(self, address):
         """ Access the cache """
@@ -94,6 +95,7 @@ class Cache():
                 # Get value from memory
 
                 cache_line = { 'recency_index'  : self.recency_index, 
+                               'added_index'    : self.added_index,
                                'tag'            : address_tag }
 
                 self.cache[index][address_index] = cache_line  
@@ -103,6 +105,7 @@ class Cache():
                 else:
                     self.usage_index[address_index][address_tag] = 1
             
+                self.added_index += 1
                 self.recency_index += 1
                 return False
 
@@ -113,6 +116,7 @@ class Cache():
 
         # Replace the specified index
         cache_line = { 'recency_index':  self.recency_index, 
+                       'added_index'    : self.added_index,
                        'tag': address_tag }
 
         self.cache[repl_index][address_index] = cache_line
@@ -122,6 +126,7 @@ class Cache():
         else:
             self.usage_index[address_index][address_tag] = 1
 
+        self.added_index += 1
         self.recency_index += 1
         return False
 

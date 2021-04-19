@@ -33,12 +33,16 @@ Data will be saved to an excel workbook and a graph demonstrating the hit ratio.
 
 - LRU: Least Recently Used
     - Discards the least recently used items first.
+- MRU: Most Recently Used
+    - Discards the most recently used items first.
 - RR: Random Replacement
     - Randomly chooses which item to discard
 - LFRU: Least Frequently Recently Used
     - Replaces an item with the least usage and the least recently used
 - LFU: Least Frequently Used
     - Replaces an item with the least usage
+- FIFO: First On First Out
+	- Replace the item that was added first with no regard to its usage
 
 # 2 Running
 
