@@ -7,7 +7,7 @@ Creation    : 04/17/21
 Description : This file contains the functionality to parse CLI arguments
 '''
 
-import argparse, os, sys
+import argparse, os, sys, subprocess
 
 from genmem     import MemoryGenerator
 from fileparser import Parse
@@ -36,6 +36,7 @@ def ParseArguments():
     parser.add_argument('--cachesize',  help='Cache size to be used')
     parser.add_argument('--linesize',   help='Cache line size to be used')
     parser.add_argument('--mult',       help='Run an entered number of simulations back-to-back')
+    parser.add_argument('-t', '--test', help='Run tests to verify the simulator is functioning properly', action="store_true")
 
     return parser.parse_args()
 
@@ -52,6 +53,16 @@ def ReadArguments():
     """ Read in command line arguments """
 
     args = ParseArguments()
+
+    if args.test:
+
+        # Remove all arguments
+        while len(sys.argv) > 1:
+            sys.argv.pop()
+
+        subprocess.run(['python3', 'test/replsimtests.py', '-v'])
+        print('')
+        sys.exit()
 
     # Read in text file for memory using CLI argument
     if args.file:

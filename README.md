@@ -56,6 +56,7 @@ Data will be saved to an excel workbook and a graph demonstrating the hit ratio.
 | --cachesize | Size of the cache                           |
 | --linesize  | Size of the cache line                      |
 | --mult      | Run simulation a specified number of times  |
+| --test      | Test the simulators functionality           |
       
 All arguments are optional. memsize and memrange are used when auto generating a memory file. file is used to read in a memory file. memsize and memrange can't be used with file. 
 
