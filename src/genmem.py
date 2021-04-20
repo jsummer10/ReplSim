@@ -8,7 +8,7 @@ Description : The file contains functionality to generate
               random memory access values of any size
 '''
 
-import random
+import random, os
 
 class MemoryGenerator():
     """ This class will generate a memory file to be used """
@@ -87,6 +87,9 @@ class MemoryGenerator():
 
     def SaveToFile(self, filename):
         """ Save memory list as a txt file for later use """
+
+        if not os.path.isdir('mem/'):
+            os.mkdir('mem/')
 
         f = open('mem/' + filename, "w")
 
