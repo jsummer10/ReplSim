@@ -140,7 +140,64 @@ class ReplSimTests(unittest.TestCase):
 
     def test_3_FIFO(self): 
         """ Description: Test the FIFO Replacement Policy """
-        return
+
+        repl_policy    = ReplacementPolicy('FIFO')
+
+        cache = [[{'added_index'  : 7}],
+                 [{'added_index'  : 1}],
+                 [{'added_index'  : 6}],
+                 [{'added_index'  : 11}],
+                 [{'added_index'  : 100}],
+                 [{'added_index'  : 54}],
+                 [{'added_index'  : 28}],
+                 [{'added_index'  : 10}],
+                 [{'added_index'  : 77}],
+                 [{'added_index'  : 92}],
+                 [{'added_index'  : 33}]]
+
+        #---------------
+        # Replacement 1
+        #---------------
+
+        repl_index = repl_policy.Replace(cache, 0, None)
+        cache[repl_index][0] = { 'added_index':  60 }
+
+        if cache != [[{'added_index'  : 7}],
+                     [{'added_index'  : 60}],
+                     [{'added_index'  : 6}],
+                     [{'added_index'  : 11}],
+                     [{'added_index'  : 100}],
+                     [{'added_index'  : 54}],
+                     [{'added_index'  : 28}],
+                     [{'added_index'  : 10}],
+                     [{'added_index'  : 77}],
+                     [{'added_index'  : 92}],
+                     [{'added_index'  : 33}]]:
+
+            self.fail('Incorrect replacement')
+
+        #---------------
+        # Replacement 2
+        #---------------
+
+        repl_index = repl_policy.Replace(cache, 0, None)
+        cache[repl_index][0] = { 'added_index':  157 }
+
+        if cache != [[{'added_index'  : 7}],
+                     [{'added_index'  : 60}],
+                     [{'added_index'  : 157}],
+                     [{'added_index'  : 11}],
+                     [{'added_index'  : 100}],
+                     [{'added_index'  : 54}],
+                     [{'added_index'  : 28}],
+                     [{'added_index'  : 10}],
+                     [{'added_index'  : 77}],
+                     [{'added_index'  : 92}],
+                     [{'added_index'  : 33}]]:
+
+            self.fail('Incorrect replacement')
+
+        print(cache)
 
     def test_4_RR(self): 
         """ Description: Test the RR Replacement Policy """
@@ -148,7 +205,81 @@ class ReplSimTests(unittest.TestCase):
 
     def test_5_LFU(self): 
         """ Description: Test the LFU Replacement Policy """
-        return
+
+        repl_policy = ReplacementPolicy('LFU')
+
+        cache = [[{'tag' : 'tag1' }],
+                 [{'tag' : 'tag2' }],
+                 [{'tag' : 'tag3' }],
+                 [{'tag' : 'tag4' }],
+                 [{'tag' : 'tag5' }],
+                 [{'tag' : 'tag6' }],
+                 [{'tag' : 'tag7' }],
+                 [{'tag' : 'tag8' }],
+                 [{'tag' : 'tag9' }],
+                 [{'tag' : 'tag10'}],
+                 [{'tag' : 'tag11'}]]
+
+        usage_index = [{ 'tag1'  : 4,
+                         'tag2'  : 1,
+                         'tag3'  : 2,
+                         'tag4'  : 1,
+                         'tag5'  : 5,
+                         'tag6'  : 6,
+                         'tag7'  : 7,
+                         'tag8'  : 8,
+                         'tag9'  : 3,
+                         'tag10' : 6,
+                         'tag11' : 9 }]
+
+        #---------------
+        # Replacement 1
+        #---------------
+
+        repl_index = repl_policy.Replace(cache, 0, usage_index)
+        cache[repl_index][0] = { 'tag' : 'tag20' }
+
+        usage_index[0]['tag20'] = 9
+
+        if cache != [[{'tag' : 'tag1' }],
+                     [{'tag' : 'tag20' }],
+                     [{'tag' : 'tag3' }],
+                     [{'tag' : 'tag4' }],
+                     [{'tag' : 'tag5' }],
+                     [{'tag' : 'tag6' }],
+                     [{'tag' : 'tag7' }],
+                     [{'tag' : 'tag8' }],
+                     [{'tag' : 'tag9' }],
+                     [{'tag' : 'tag10'}],
+                     [{'tag' : 'tag11'}]]:
+
+            self.fail('Incorrect replacement')
+
+        #---------------
+        # Replacement 2
+        #---------------
+
+        repl_index = repl_policy.Replace(cache, 0, usage_index)
+        cache[repl_index][0] = { 'tag' : 'tag50' }
+
+        usage_index[0]['tag50'] = 60
+
+        if cache != [[{'tag' : 'tag1'  }],
+                     [{'tag' : 'tag20' }],
+                     [{'tag' : 'tag3'  }],
+                     [{'tag' : 'tag50' }],
+                     [{'tag' : 'tag5'  }],
+                     [{'tag' : 'tag6'  }],
+                     [{'tag' : 'tag7'  }],
+                     [{'tag' : 'tag8'  }],
+                     [{'tag' : 'tag9'  }],
+                     [{'tag' : 'tag10' }],
+                     [{'tag' : 'tag11' }]]:
+
+            self.fail('Incorrect replacement')
+
+        print(cache)
+        print(usage_index[0])
 
     def test_6_LFRU(self): 
         """ Description: Test the LFRU Replacement Policy """
