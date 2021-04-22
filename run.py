@@ -20,9 +20,9 @@ __doc__             = 'The Replacement Policy Simulator helps simulate a fully a
 import os,sys, time
 sys.path.insert(0, os.getcwd() + os.path.sep + 'src')
 
-from simulation import Simulation
-from logger     import InitializeLogger
-from arguments  import ReadArguments
+from src.simulation import Simulation
+from src.logger     import InitializeLogger
+from src.arguments  import ReadArguments
 
 def main():
 
