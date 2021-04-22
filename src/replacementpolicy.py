@@ -47,6 +47,24 @@ class ReplacementPolicy():
 
         return min_index
 
+    def LRUML(self, cache, address_index):
+        """ perform a least recently used replacement with machine learning """ 
+        
+        min_value = None
+        min_index = None
+
+        for index, line in enumerate(cache):
+            if min_value is None or line[address_index]['recency_index'] < min_value:
+                min_value = line[address_index]['recency_index']
+                min_index = index
+
+        # Call machine learning prediction 
+
+        if ml_pred_replace:
+            return min_index
+        else:
+            return None
+
     def RR(self, cache):
         """ perform a random replacement """ 
         
@@ -55,7 +73,6 @@ class ReplacementPolicy():
     def LFU(self, cache, address_index, usage_index):
         """ perform a least frequently used replacement """ 
         
-        # Perform least frequently used analysis
         min_used = None
         least_used_tags = []
 

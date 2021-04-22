@@ -64,62 +64,6 @@ def ReadArguments():
         print('')
         sys.exit()
 
-    # Read in text file for memory using CLI argument
-    if args.file:
-        if(os.path.isfile(args.file)):
-            cache_config['memory'] = MemFromFile(args.file)
-        else:
-            print('Unable to open', args.file)
-            sys.exit()
-
-    # Generate random memory using CLI arguments
-    if not args.file:
-        if args.memsize and args.memrange:
-
-            try:
-                memsize = int(args.memsize)
-            except:
-                print('Unable to convert', args.memsize, 'to an integer')
-                sys.exit()
-
-            try:
-                memrange = int(args.memrange)
-            except:
-                print('Unable to convert', args.memrange, 'to an integer')
-                sys.exit()
-
-            cache_config['mem_size']  = memsize
-            cache_config['mem_range'] = memrange
-
-        elif args.memsize and not args.memrange:
-            try:
-                memsize = int(args.memsize)
-            except:
-                print('Unable to convert', args.memsize, 'to an integer')
-                sys.exit()
-
-            cache_config['mem_size']  = memsize
-            cache_config['mem_range'] = DEFAULT_MEMRANGE
-
-        elif not args.memsize and args.memrange:
-            try:
-                memrange = int(args.memrange)
-            except:
-                print('Unable to convert', args.memrange, 'to an integer')
-                sys.exit()
-
-            cache_config['mem_size']  = DEFAULT_MEMSIZE
-            cache_config['mem_range'] = memrange
-
-        else:
-            cache_config['mem_size']  = DEFAULT_MEMSIZE
-            cache_config['mem_range'] = DEFAULT_MEMRANGE
-
-        cache_config['memory']  = RandomMem(size=cache_config['mem_size'], 
-                                            max_address=cache_config['mem_range'], 
-                                            filename='gen_mem',
-                                            save_mem=True)
-
     # Set cache size using CLI argument
     if args.cachesize:
 
@@ -238,8 +182,61 @@ def ReadArguments():
 
         cache_config['mult_sims'] = multiple
 
+    # Read in text file for memory using CLI argument
+    if args.file:
+        if(os.path.isfile(args.file)):
+            cache_config['memory'] = MemFromFile(args.file)
+        else:
+            print('Unable to open', args.file)
+            sys.exit()
 
+    # Generate random memory using CLI arguments
+    if not args.file:
+        if args.memsize and args.memrange:
 
+            try:
+                memsize = int(args.memsize)
+            except:
+                print('Unable to convert', args.memsize, 'to an integer')
+                sys.exit()
+
+            try:
+                memrange = int(args.memrange)
+            except:
+                print('Unable to convert', args.memrange, 'to an integer')
+                sys.exit()
+
+            cache_config['mem_size']  = memsize
+            cache_config['mem_range'] = memrange
+
+        elif args.memsize and not args.memrange:
+            try:
+                memsize = int(args.memsize)
+            except:
+                print('Unable to convert', args.memsize, 'to an integer')
+                sys.exit()
+
+            cache_config['mem_size']  = memsize
+            cache_config['mem_range'] = DEFAULT_MEMRANGE
+
+        elif not args.memsize and args.memrange:
+            try:
+                memrange = int(args.memrange)
+            except:
+                print('Unable to convert', args.memrange, 'to an integer')
+                sys.exit()
+
+            cache_config['mem_size']  = DEFAULT_MEMSIZE
+            cache_config['mem_range'] = memrange
+
+        else:
+            cache_config['mem_size']  = DEFAULT_MEMSIZE
+            cache_config['mem_range'] = DEFAULT_MEMRANGE
+
+        cache_config['memory']  = RandomMem(size=cache_config['mem_size'], 
+                                            max_address=cache_config['mem_range'], 
+                                            filename='gen_mem.csv',
+                                            save_mem=True)
 
 
 

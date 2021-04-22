@@ -76,7 +76,7 @@ class Simulation():
             # Generate new memory 
             cache_config['memory'] = RandomMem(size=cache_config['mem_size'], 
                                                max_address=cache_config['mem_range'],
-                                               filename='gen_mem' + str(i+1) + '.txt',
+                                               filename='gen_mem' + str(i+1) + '.csv',
                                                save_mem=True)
 
             print('Beginning simulation batch', i+1, 'of', cache_config['mult_sims'], 'using gen_mem' + str(i+1) + '.txt')

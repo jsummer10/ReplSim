@@ -8,7 +8,8 @@ Description : The file contains functionality to generate
               random memory access values of any size
 '''
 
-import random, os
+import random, os, math
+from config import cache_config
 
 class MemoryGenerator():
     """ This class will generate a memory file to be used """
@@ -94,7 +95,13 @@ class MemoryGenerator():
         f = open('mem/' + filename, "w")
 
         for item in self.memory:
-            f.write(str(item) + '\n')
+            # Get tag + index bits
+            address_bits   = '{0:032b}'.format(item)
+            offset_bits    = int(math.log(cache_config['line_size'], 2))
+            address_tag    = int(address_bits[0 : -offset_bits], 2)
+
+            # write to file
+            f.write(str(item) + ', ' + str(address_tag) + '\n')
 
         f.close()
 
