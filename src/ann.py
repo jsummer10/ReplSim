@@ -52,7 +52,7 @@ def Plot_Predictions(test, predicted):
     plt.plot(test, color='red', label='Real Policy Replacement')
     plt.plot(predicted, color='blue', label='Predicted Replacement Policy')
     plt.title('Replacement Policy Prediction')
-    plt.xlabel('Hits')
+    plt.xlabel('cache_addr') # want to predict patterns of memory hits
     plt.ylabel('Replacement Policy Prediction')
     plt.legend()
     plt.show()
@@ -71,27 +71,22 @@ def Train_Replacement_Policy():
     dataset = pd.read_csv("data_int_replacement.csv", index_col='policy')
     dataset.head()
     # -------------------------------------------------------------------
-    #      Checking for missing values by checking the index rows of
+    #      Checking for recurring cache addresses to train on to enable replacement policy
     #      the training set and the test set. We are looking at testing and training
-    #      what we should move into L1 Cache
+    #      what we can predict the cache addresses and forecast to optimize our cache
     # -------------------------------------------------------------------
 
-    training_set = dataset[:'class'].iloc[:1].values
+    training_set = dataset[:'cache_addr'].iloc[:1].values
     print(training_set)
-    test_set = dataset['class':].iloc[:1].values
+    test_set = dataset['cache_addr':].iloc[:1].values
     print(test_set)
 
     # -------------------------------------------------------------------
-    #     We chose to train on our Hit attribute under class and then test
-    #     on our miss rates. Without any machine learning we see that
-    #     our cache replacement policy is < 50% and thus we believe we can test
-    #     our data set based on these two classes
-    #     p = Hit rates
-    #     (1-p) = miss rates
+    # come up with math here
     # -------------------------------------------------------------------
 
     dataset["class"].plot(figsize=(16, 4), legend=True)
-    plt.legend(['Training set Hits', 'Test set Misses'])
+    plt.legend(['Training set Hits', 'Test set Misses']) # update to cache addr
     plt.title('L1 Smart Cache')
     plt.show()
     # --------------------------------------------------------------------
@@ -103,15 +98,13 @@ def Train_Replacement_Policy():
 
     # --------------------------------------------------------------------
     #     Long Short-Term Memory stores long term memory state
-    #     Need to create data structure for each element of the training set
-    #     we have a total of 10,002 values within our data set (could potentially be more)
-    #     we choose 100 timesteps or 100 previous training sets
+    #
     # --------------------------------------------------------------------
 
     X_train = []
     y_train = []
-    for i in range(100, 10002):
-        X_train.append(training_set_scaled[i - 100:i, 0])
+    for i in range(30, 500):
+        X_train.append(training_set_scaled[i - 500:i, 0])
         y_train.append(training_set_scaled[i, 0])
         X_train, y_train = np.array(X_train), np.array(y_train)
 
@@ -123,7 +116,7 @@ def Train_Replacement_Policy():
 
     regressor = Sequential()
     # First LSTM layer with Dropout regularisation
-    # regressor.add(LSTM(units=50, return_sequences=True, input_shape=(X_train.shape[1], 1)))
+    regressor.add(LSTM(units=50, return_sequences=True, input_shape=(X_train.shape[1], 1)))
     regressor.add(Dropout(0.2))
     # Second LSTM layer
     regressor.add(LSTM(units=50, return_sequences=True))
@@ -144,14 +137,14 @@ def Train_Replacement_Policy():
     # Compiling the RNN
     regressor.compile(optimizer='rmsprop', loss='mean_squared_error')
     # Fitting to the training set
-    regressor.fit(X_train, y_train, epochs=50, batch_size=32)
+    regressor.fit(X_train, y_train, epochs=5, batch_size=32)
 
     # --------------------------------------------------------------------
     #     Get test set ready as the training set
     #     we get the first 100 entries of the test set have 100 previous values
     # --------------------------------------------------------------------
 
-    dataset_total = pd.concat((dataset["class"][:'Hit'], dataset["class"]['Miss':]), axis=0)
+    dataset_total = pd.concat((dataset["class"][:'Hit'], dataset["class"]['Miss':]), axis=0) # update to the code for cache_addr
     inputs = dataset_total[len(dataset_total) - len(test_set) - 100:].values
     inputs = inputs.reshape(-1, 1)
     inputs = sc.transform(inputs)
@@ -169,10 +162,12 @@ def Train_Replacement_Policy():
     Return_RMSE(test_set, predicted_cache_result)
 
 
+def ReplacementPolicyDecision():
+
 def main():
     ConvertData()
 
-    # Train_Replacement_Policy()
+    Train_Replacement_Policy()
 
 
 if __name__ == '__main__':
