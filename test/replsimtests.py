@@ -18,11 +18,125 @@ class ReplSimTests(unittest.TestCase):
    
     def test_1_LRU(self): 
         """ Description: Test the LRU Replacement Policy """
-        return
+
+        repl_policy    = ReplacementPolicy('LRU')
+
+        cache = [[{'recency_index'  : 7}],
+                 [{'recency_index'  : 1}],
+                 [{'recency_index'  : 6}],
+                 [{'recency_index'  : 11}],
+                 [{'recency_index'  : 100}],
+                 [{'recency_index'  : 54}],
+                 [{'recency_index'  : 28}],
+                 [{'recency_index'  : 10}],
+                 [{'recency_index'  : 77}],
+                 [{'recency_index'  : 92}],
+                 [{'recency_index'  : 33}]]
+
+        #---------------
+        # Replacement 1
+        #---------------
+
+        repl_index = repl_policy.Replace(cache, 0, None)
+        cache[repl_index][0] = { 'recency_index':  60 }
+
+        if cache != [[{'recency_index'  : 7}],
+                     [{'recency_index'  : 60}],
+                     [{'recency_index'  : 6}],
+                     [{'recency_index'  : 11}],
+                     [{'recency_index'  : 100}],
+                     [{'recency_index'  : 54}],
+                     [{'recency_index'  : 28}],
+                     [{'recency_index'  : 10}],
+                     [{'recency_index'  : 77}],
+                     [{'recency_index'  : 92}],
+                     [{'recency_index'  : 33}]]:
+
+            self.fail('Incorrect replacement')
+
+        #---------------
+        # Replacement 2
+        #---------------
+
+        repl_index = repl_policy.Replace(cache, 0, None)
+        cache[repl_index][0] = { 'recency_index':  157 }
+
+        if cache != [[{'recency_index'  : 7}],
+                     [{'recency_index'  : 60}],
+                     [{'recency_index'  : 157}],
+                     [{'recency_index'  : 11}],
+                     [{'recency_index'  : 100}],
+                     [{'recency_index'  : 54}],
+                     [{'recency_index'  : 28}],
+                     [{'recency_index'  : 10}],
+                     [{'recency_index'  : 77}],
+                     [{'recency_index'  : 92}],
+                     [{'recency_index'  : 33}]]:
+
+            self.fail('Incorrect replacement')
+
+        print(cache)
 
     def test_2_MRU(self): 
         """ Description: Test the MRU Replacement Policy """
-        return
+
+        repl_policy    = ReplacementPolicy('MRU')
+
+        cache = [[{'recency_index'  : 7}],
+                 [{'recency_index'  : 1}],
+                 [{'recency_index'  : 6}],
+                 [{'recency_index'  : 11}],
+                 [{'recency_index'  : 100}],
+                 [{'recency_index'  : 54}],
+                 [{'recency_index'  : 28}],
+                 [{'recency_index'  : 10}],
+                 [{'recency_index'  : 77}],
+                 [{'recency_index'  : 92}],
+                 [{'recency_index'  : 33}]]
+
+        #---------------
+        # Replacement 1
+        #---------------
+
+        repl_index = repl_policy.Replace(cache, 0, None)
+        cache[repl_index][0] = { 'recency_index':  60 }
+
+        if cache != [[{'recency_index'  : 7}],
+                     [{'recency_index'  : 1}],
+                     [{'recency_index'  : 6}],
+                     [{'recency_index'  : 11}],
+                     [{'recency_index'  : 60}],
+                     [{'recency_index'  : 54}],
+                     [{'recency_index'  : 28}],
+                     [{'recency_index'  : 10}],
+                     [{'recency_index'  : 77}],
+                     [{'recency_index'  : 92}],
+                     [{'recency_index'  : 33}]]:
+
+            self.fail('Incorrect replacement')
+
+        #---------------
+        # Replacement 2
+        #---------------
+
+        repl_index = repl_policy.Replace(cache, 0, None)
+        cache[repl_index][0] = { 'recency_index':  40 }
+
+        if cache != [[{'recency_index'  : 7}],
+                     [{'recency_index'  : 1}],
+                     [{'recency_index'  : 6}],
+                     [{'recency_index'  : 11}],
+                     [{'recency_index'  : 60}],
+                     [{'recency_index'  : 54}],
+                     [{'recency_index'  : 28}],
+                     [{'recency_index'  : 10}],
+                     [{'recency_index'  : 77}],
+                     [{'recency_index'  : 40}],
+                     [{'recency_index'  : 33}]]:
+
+            self.fail('Incorrect replacement')
+
+        print(cache)
 
     def test_3_FIFO(self): 
         """ Description: Test the FIFO Replacement Policy """
