@@ -65,9 +65,10 @@ def Train_Replacement_Policy():
     # plot sequence for prediction
     # plot demonstrates predictability and sequence in index + tag
     # -------------------------------------------------------------------
-    df[1][:300].plot(figsize=(16, 4), legend=True)
-    plt.legend(['Test set Index + Tag'])
-    plt.title('L1 Smart Cache')
+    df[1][:1500].plot(figsize=(16, 4), legend=True)
+    df[1][1500:].plot(figsize =(16,4), legend=True)
+    plt.legend(['Training Set', 'Test Set'],)
+    plt.title('L1 Smart Cache on Simulated Cache for Replacement Policies')
     # plt.show()
 
     # # --------------------------------------------------------------------
@@ -87,12 +88,11 @@ def Train_Replacement_Policy():
     y_train = []
 
     # --------------------------------------------------------------------
-    # ranging from 28 - length of training set
-    # chosen 28 as 28 bits for 2-way associative cache as baseline
-    # can choose different number
+    # ranging from train 1500 of data set
+    # 50 time steps and 1 output
     # --------------------------------------------------------------------
-    for i in range(28, len(training_set)):
-        X_train.append(training_set_scaled[i - 28:i, 0])
+    for i in range(50, 1500):
+        X_train.append(training_set_scaled[i - 50:i, 0])
         y_train.append(training_set_scaled[i, 0])
         X_Array = np.array(X_train)
         y_Array = np.array(y_train)
@@ -129,7 +129,7 @@ def Train_Replacement_Policy():
     # Compiling the RNN
     regressor.compile(optimizer='rmsprop', loss='mean_squared_error')
     # Fitting to the training set
-    regressor.fit(X_Array, y_Array, epochs=50, batch_size=50)
+    regressor.fit(X_Array, y_Array, epochs=2, batch_size=50)
 
     # --------------------------------------------------------------------
     # Get test set ready as the training set
@@ -140,21 +140,26 @@ def Train_Replacement_Policy():
     # print(len(dataset_total))
     # inputs = dataset_total[len(dataset_total) - len(test_set)].values
     # inputs = inputs.reshape(-1, 1)
-    inputs = sc.transform(test_set)
+
+    inputs = sc.fit_transform(test_set)
 
     # Preparing X_test and predicting the cache index + tag
+    # test 500 of data set
     X_test = []
-    for i in range(100, 500):
-        X_test.append(inputs[i - 100:i, 0])
-        X_test = np.array(X_test)
-        X_test = np.reshape(X_test, (X_test.shape[0], X_test.shape[1], 1))
-        predicted_cache_result = regressor.predict(X_test)
-        predicted_cache = sc.inverse_transform(predicted_cache_result)
+    for i in range(1500, len(test_set)):
+        X_test.append(inputs[i - 1500:i, 0])
+
+    X_test_array = np.array(X_test)
+    # print(X_test_array)
+    X_test_array = np.reshape(X_test_array, (X_test_array.shape[0], X_test_array.shape[1], 1))
+    predicted_cache_result = regressor.predict(X_test_array)
+    # print(predicted_cache_result)
+    predicted_cache_result = sc.inverse_transform(predicted_cache_result)
 
     # Visualizing the results for LSTM
-    Plot_Predictions(test_set, predicted_cache)
+    # Plot_Predictions(test_set, predicted_cache_result)
     # evaluate model
-    Return_RMSE(test_set, predicted_cache)
+    # Return_RMSE(test_set, predicted_cache_result)
 
 
 # def ReplacementPolicyDecision():
