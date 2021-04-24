@@ -62,10 +62,10 @@ class ReplacementPolicy():
 
         # Call machine learning prediction 
 
-        if ml_pred_replace:
-            return min_index
-        else:
-            return None
+        #if ml_pred_replace:
+        #    return min_index
+        #else:
+        #    return None
 
     def RR(self, cache):
         """ perform a random replacement """ 
