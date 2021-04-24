@@ -33,6 +33,8 @@ class ReplacementPolicy():
             return self.FIFO(cache, address_index)
         elif self.repl == 'MRU':
             return self.MRU(cache, address_index)
+        elif self.repl == 'LRUML':
+            return self.LRUML(cache, address_index)
 
     def LRU(self, cache, address_index):
         """ perform a least recently used replacement """ 

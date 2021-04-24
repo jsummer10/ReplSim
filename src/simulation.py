@@ -38,12 +38,13 @@ class Simulation():
 
         self.sim_configs = []
 
-        self.sim_configs.append(Cache(config_name='LRU Cache (2-way)',  repl='LRU',     ways=2))
-        self.sim_configs.append(Cache(config_name='RR Cache (2-way)',   repl='RR',      ways=2))
-        self.sim_configs.append(Cache(config_name='LFRU Cache (2-way)', repl='LFRU',    ways=2))
-        self.sim_configs.append(Cache(config_name='LFU Cache (2-way)',  repl='LFU',     ways=2))
-        self.sim_configs.append(Cache(config_name='FIFO Cache (2-way)', repl='FIFO',    ways=2))
-        self.sim_configs.append(Cache(config_name='MRU Cache (2-way)',  repl='MRU',     ways=2))
+        self.sim_configs.append(Cache(config_name='LRU Cache (2-way)',   repl='LRU',     ways=2))
+        self.sim_configs.append(Cache(config_name='RR Cache (2-way)',    repl='RR',      ways=2))
+        self.sim_configs.append(Cache(config_name='LFRU Cache (2-way)',  repl='LFRU',    ways=2))
+        self.sim_configs.append(Cache(config_name='LFU Cache (2-way)',   repl='LFU',     ways=2))
+        self.sim_configs.append(Cache(config_name='FIFO Cache (2-way)',  repl='FIFO',    ways=2))
+        self.sim_configs.append(Cache(config_name='MRU Cache (2-way)',   repl='MRU',     ways=2))
+        self.sim_configs.append(Cache(config_name='LRUML Cache (2-way)', repl='LRUML',   ways=2))
 
     def RunSims(self):
         """ Select how many sim batches will be run """
