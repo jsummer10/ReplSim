@@ -15,6 +15,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from keras.models import Sequential
 from keras.layers import Dense, LSTM, Dropout, GRU, Bidirectional
+from keras.optimizers import SGD
 from sklearn.preprocessing import MinMaxScaler
 import math
 from sklearn.metrics import mean_squared_error
@@ -54,11 +55,9 @@ def Train_Replacement_Policy():
     # -------------------------------------------------------------------
 
     # getting the index + tag
-    training_set = df.values
-    # print("Training Set:")
+    training_set = df[1][:1500].values
     # print(training_set)
-    test_set = df.values
-    # print("Test Set:)")
+    test_set = df[1][1500:].values
     # print(test_set)
 
     # -------------------------------------------------------------------
@@ -66,10 +65,10 @@ def Train_Replacement_Policy():
     # plot demonstrates predictability and sequence in index + tag
     # -------------------------------------------------------------------
     df[1][:1500].plot(figsize=(16, 4), legend=True)
-    df[1][1500:].plot(figsize =(16,4), legend=True)
-    plt.legend(['Training Set', 'Test Set'],)
+    df[1][1500:].plot(figsize=(16, 4), legend=True)
+    plt.legend(['Training Set', 'Test Set'], )
     plt.title('L1 Smart Cache on Simulated Cache for Replacement Policies')
-    # plt.show()
+    plt.show()
 
     # # --------------------------------------------------------------------
     # scale our training set from zero to 1 for training set
@@ -77,8 +76,10 @@ def Train_Replacement_Policy():
     # # --------------------------------------------------------------------
 
     sc = MinMaxScaler(feature_range=(0, 1))
-    training_set_scaled = sc.fit_transform(training_set)
-    # print(training_set_scaled)
+    dataFrame_train = pd.DataFrame(training_set)
+    training_set_scaled = sc.fit_transform(dataFrame_train)
+    # print("train_set_scaled")
+    # print(training_set_scaled.shape)
 
     # --------------------------------------------------------------------
     # Long Short-Term Memory stores long term memory state
@@ -91,11 +92,11 @@ def Train_Replacement_Policy():
     # ranging from train 1500 of data set
     # 50 time steps and 1 output
     # --------------------------------------------------------------------
-    for i in range(50, 1500):
-        X_train.append(training_set_scaled[i - 50:i, 0])
-        y_train.append(training_set_scaled[i, 0])
-        X_Array = np.array(X_train)
-        y_Array = np.array(y_train)
+    for i in range(0, 1500):
+        X_train.append(training_set_scaled[i])
+        y_train.append(training_set_scaled[i])
+    X_Array = np.array(X_train)
+    y_Array = np.array(y_train)
 
     # --------------------------------------------------------------------
     # Long Short-Term Memory (LSTM) architecture
@@ -104,6 +105,11 @@ def Train_Replacement_Policy():
     # --------------------------------------------------------------------
     # Reshaping X_train for efficient modelling
     X_Array = np.reshape(X_train, (X_Array.shape[0], X_Array.shape[1], 1))
+
+
+
+    # print("Train X_array")
+    # print(X_Array.shape)
 
     regressor = Sequential()
     # # First LSTM layer with Dropout regularisation
@@ -120,7 +126,7 @@ def Train_Replacement_Policy():
     regressor.add(LSTM(units=50))
     regressor.add(Dropout(0.2))
     # The output layer
-    regressor.add(Dense(units=1))
+    regressor.add(Dense(units=1, activation='sigmoid'))
 
     # --------------------------------------------------------------------
     # Long Short-Term Memory (LSTM) architecture is a Recurrent Neural Net (RNN)
@@ -129,40 +135,82 @@ def Train_Replacement_Policy():
     # Compiling the RNN
     regressor.compile(optimizer='rmsprop', loss='mean_squared_error')
     # Fitting to the training set
-    regressor.fit(X_Array, y_Array, epochs=2, batch_size=50)
+    regressor.fit(X_Array, y_Array, epochs=150, batch_size=200)
 
     # --------------------------------------------------------------------
     # Get test set ready as the training set
     # we get the first 100 entries of the test set have 100 previous values
     # --------------------------------------------------------------------
 
-    # dataset_total = pd.concat((df, df), axis=0)
-    # print(len(dataset_total))
-    # inputs = dataset_total[len(dataset_total) - len(test_set)].values
-    # inputs = inputs.reshape(-1, 1)
+    # dataset_total = pd.concat((df[1][:1500], df[1][1500:]), axis=0)
+    # data = pd.DataFrame(dataset_total)
+    # inputs = data[len(dataset_total) - len(test_set)].values
+    # print(inputs)
+    # inputs.reshape(-1, 1)
 
-    inputs = sc.fit_transform(test_set)
+    test_set.reshape((-1, 1))
+    dataFrame_test = pd.DataFrame(test_set)
+    # print(test_set)
+    test_set_scaled = sc.transform(dataFrame_test)
+    # print(test_set_scaled)
 
     # Preparing X_test and predicting the cache index + tag
     # test 500 of data set
     X_test = []
-    for i in range(1500, len(test_set)):
-        X_test.append(inputs[i - 1500:i, 0])
+    for i in range(0, len(test_set)):
+        X_test.append(test_set_scaled[i])
 
     X_test_array = np.array(X_test)
-    # print(X_test_array)
+    # print("x_test_array scaled")
+    # print(X_test_array.shape)
     X_test_array = np.reshape(X_test_array, (X_test_array.shape[0], X_test_array.shape[1], 1))
+    # print("reshaped")
+    # print(X_test_array.shape)
     predicted_cache_result = regressor.predict(X_test_array)
+    # print("Predicted")
     # print(predicted_cache_result)
     predicted_cache_result = sc.inverse_transform(predicted_cache_result)
 
     # Visualizing the results for LSTM
-    # Plot_Predictions(test_set, predicted_cache_result)
+    Plot_Predictions(test_set, predicted_cache_result)
     # evaluate model
-    # Return_RMSE(test_set, predicted_cache_result)
+    Return_RMSE(test_set, predicted_cache_result)
 
+    # The GRU architecture
+    regressorGRU = Sequential()
+    # First GRU layer with Dropout regularisation
+    regressorGRU.add(GRU(units=50, return_sequences=True, input_shape=(X_Array.shape[1], 1), activation='tanh'))
+    regressorGRU.add(Dropout(0.2))
+    # Second GRU layer
+    regressorGRU.add(GRU(units=50, return_sequences=True, input_shape=(X_Array.shape[1], 1), activation='tanh'))
+    regressorGRU.add(Dropout(0.2))
+    # Third GRU layer
+    regressorGRU.add(GRU(units=50, return_sequences=True, input_shape=(X_Array.shape[1], 1), activation='tanh'))
+    regressorGRU.add(Dropout(0.2))
+    # Fourth GRU layer
+    regressorGRU.add(GRU(units=50, activation='tanh'))
+    regressorGRU.add(Dropout(0.2))
+    # The output layer
+    regressorGRU.add(Dense(units=1))
+    # Compiling the RNN
+    regressorGRU.compile(optimizer=SGD(lr=0.01, decay=1e-7, momentum=0.9, nesterov=False), loss='mean_squared_error')
+    # Fitting to the training set
+    regressorGRU.fit(X_Array, y_Array, epochs=150, batch_size=200)
 
-# def ReplacementPolicyDecision():
+    # Preparing X_test and predicting the prices
+    X_test_GRU = []
+    for i in range(0, len(test_set)):
+        X_test_GRU.append(test_set_scaled[i])
+    X_test = np.array(X_test_GRU)
+    X_test = np.reshape(X_test, (X_test.shape[0], X_test.shape[1], 1))
+    GRU_predicted = regressorGRU.predict(X_test)
+    GRU_predicted = sc.inverse_transform(GRU_predicted)
+
+    # Visualizing the results for LSTM
+    Plot_Predictions(test_set, GRU_predicted)
+    # evaluate model
+    Return_RMSE(test_set, GRU_predicted)
+
 
 def main():
     Train_Replacement_Policy()
