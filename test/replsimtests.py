@@ -283,7 +283,81 @@ class ReplSimTests(unittest.TestCase):
 
     def test_6_LFRU(self): 
         """ Description: Test the LFRU Replacement Policy """
-        return
+        
+        repl_policy = ReplacementPolicy('LFRU')
+
+        cache = [[{ 'tag' : 'tag1' , 'recency_index'  : 7   }],
+                 [{ 'tag' : 'tag2' , 'recency_index'  : 1   }],
+                 [{ 'tag' : 'tag3' , 'recency_index'  : 6   }],
+                 [{ 'tag' : 'tag4' , 'recency_index'  : 11  }],
+                 [{ 'tag' : 'tag5' , 'recency_index'  : 100 }],
+                 [{ 'tag' : 'tag6' , 'recency_index'  : 54  }],
+                 [{ 'tag' : 'tag7' , 'recency_index'  : 28  }],
+                 [{ 'tag' : 'tag8' , 'recency_index'  : 10  }],
+                 [{ 'tag' : 'tag9' , 'recency_index'  : 77  }],
+                 [{ 'tag' : 'tag10', 'recency_index'  : 92  }],
+                 [{ 'tag' : 'tag11', 'recency_index'  : 33  }]]
+
+        usage_index = [{ 'tag1'  : 4,
+                         'tag2'  : 1,
+                         'tag3'  : 2,
+                         'tag4'  : 1,
+                         'tag5'  : 5,
+                         'tag6'  : 6,
+                         'tag7'  : 7,
+                         'tag8'  : 8,
+                         'tag9'  : 3,
+                         'tag10' : 6,
+                         'tag11' : 9 }]
+
+        #---------------
+        # Replacement 1
+        #---------------
+
+        repl_index = repl_policy.Replace(cache, 0, usage_index)
+        cache[repl_index][0] = { 'tag' : 'tag20', 'recency_index': 60 }
+
+        usage_index[0]['tag20'] = 9
+
+        if cache != [[{'tag' : 'tag1' , 'recency_index'  : 7   }],
+                     [{'tag' : 'tag20', 'recency_index'  : 60  }],
+                     [{'tag' : 'tag3' , 'recency_index'  : 6   }],
+                     [{'tag' : 'tag4' , 'recency_index'  : 11  }],
+                     [{'tag' : 'tag5' , 'recency_index'  : 100 }],
+                     [{'tag' : 'tag6' , 'recency_index'  : 54  }],
+                     [{'tag' : 'tag7' , 'recency_index'  : 28  }],
+                     [{'tag' : 'tag8' , 'recency_index'  : 10  }],
+                     [{'tag' : 'tag9' , 'recency_index'  : 77  }],
+                     [{'tag' : 'tag10', 'recency_index'  : 92  }],
+                     [{'tag' : 'tag11', 'recency_index'  : 33  }]]:
+
+            self.fail('Incorrect replacement')
+
+        #---------------
+        # Replacement 2
+        #---------------
+
+        repl_index = repl_policy.Replace(cache, 0, usage_index)
+        cache[repl_index][0] = { 'tag' : 'tag60', 'recency_index': 80 }
+
+        usage_index[0]['tag60'] = 10
+
+        if cache != [[{'tag' : 'tag1' , 'recency_index'  : 7   }],
+                     [{'tag' : 'tag20', 'recency_index'  : 60  }],
+                     [{'tag' : 'tag3' , 'recency_index'  : 6   }],
+                     [{'tag' : 'tag60', 'recency_index'  : 80  }],
+                     [{'tag' : 'tag5' , 'recency_index'  : 100 }],
+                     [{'tag' : 'tag6' , 'recency_index'  : 54  }],
+                     [{'tag' : 'tag7' , 'recency_index'  : 28  }],
+                     [{'tag' : 'tag8' , 'recency_index'  : 10  }],
+                     [{'tag' : 'tag9' , 'recency_index'  : 77  }],
+                     [{'tag' : 'tag10', 'recency_index'  : 92  }],
+                     [{'tag' : 'tag11', 'recency_index'  : 33  }]]:
+
+            self.fail('Incorrect replacement')
+
+        print(cache)
+        print(usage_index[0])
 
 def RunUnitTests():
 
