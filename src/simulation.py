@@ -90,7 +90,6 @@ class Simulation():
         self.sim_configs.append(Cache(config_name='LFU Cache (2-way)',   repl='LFU',     ways=2))
         self.sim_configs.append(Cache(config_name='FIFO Cache (2-way)',  repl='FIFO',    ways=2))
         self.sim_configs.append(Cache(config_name='MRU Cache (2-way)',   repl='MRU',     ways=2))
-        self.sim_configs.append(Cache(config_name='LRUML Cache (2-way)', repl='LRUML',   ways=2))
 
     def RunSims(self):
         """ Select how many sim batches will be run """
