@@ -99,7 +99,7 @@ def createTempPredictions(predictions):
         new_orig_mem = original_mem.replace(i, data_predictions[0][i])
 
     data_new_mem = pd.DataFrame(new_orig_mem)
-    list_new_mem = data_new_mem.values.tolist()
+    list_new_mem = data_new_mem[1].values.tolist()
     return list_new_mem
 
 
@@ -282,4 +282,5 @@ def main():
 
 if __name__ == '__main__':
     main()
+    print(main())
 
