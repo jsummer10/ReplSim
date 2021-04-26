@@ -63,8 +63,10 @@ class Cache():
 
         if self.ways == 1:
             address_index = 0
+            adress_tag_index = address_tag
         else:
             address_index  = int(address_bits[self.tag_bits : self.tag_bits + self.index_bits], 2)
+            adress_tag_index = int(address_bits[0 : self.tag_bits + self.index_bits], 2)
 
         #self.LogCache(address_tag)
 
@@ -96,7 +98,8 @@ class Cache():
 
                 cache_line = { 'recency_index'  : self.recency_index, 
                                'added_index'    : self.added_index,
-                               'tag'            : address_tag }
+                               'tag'            : address_tag,
+                               'tag_index'      : adress_tag_index  }
 
                 self.cache[index][address_index] = cache_line  
 
@@ -109,15 +112,16 @@ class Cache():
                 self.recency_index += 1
                 return False
 
-        repl_index = self.repl_policy.Replace(self.cache, address_index, self.usage_index, address_tag)
+        repl_index = self.repl_policy.Replace(self.cache, address_index, self.usage_index, adress_tag_index)
 
         if repl_index is None:
             return False
 
         # Replace the specified index
-        cache_line = { 'recency_index':  self.recency_index, 
+        cache_line = { 'recency_index'  : self.recency_index, 
                        'added_index'    : self.added_index,
-                       'tag': address_tag }
+                       'tag'            : address_tag,
+                       'tag_index'      : adress_tag_index }
 
         self.cache[repl_index][address_index] = cache_line
 
