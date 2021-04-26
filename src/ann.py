@@ -10,7 +10,7 @@ Description : This file contains the development of a neural net
 """
 
 import pandas as pd
-import os, sys
+import os
 import numpy as np
 import matplotlib.pyplot as plt
 from keras.models import Sequential
@@ -23,12 +23,12 @@ from sklearn.metrics import mean_squared_error
 os.chdir("../mem/")
 
 
-def Plot_Predictions(test, predicted):
+def Plot_Predictions(test, predicted, mlalgo):
     plt.plot(test, color='red', label='Real Policy Replacement')
     plt.plot(predicted, color='blue', label='Predicted Replacement Policy')
-    plt.title('Replacement Policy Prediction')
-    plt.xlabel('cache_addr')  # want to predict patterns of memory hits
-    plt.ylabel('Replacement Policy Prediction')
+    plt.title('Replacement Policy Prediction Using' + mlalgo)
+    plt.xlabel('Number of Replaced (Tag + Index)')  # want to predict patterns of memory hits
+    plt.ylabel('Tag + Index Values')
     plt.legend()
     plt.show()
 
@@ -38,8 +38,37 @@ def Plot_Predictions(test, predicted):
 # -----------------------------------------------------------------
 def Return_RMSE(test, predicted):
     rmse = math.sqrt(mean_squared_error(test, predicted))
-    print("The root mean squared error is {}.".format(rmse))
+    # print("The root mean squared error is {}.".format(rmse))
+    return rmse
 
+
+def Plot_Train_Test_Data():
+    # -------------------------------------------------------------------
+    # plot sequence for prediction
+    # plot demonstrates predictability and sequence in index + tag
+    # -------------------------------------------------------------------
+    dataset = pd.read_csv("gen_mem.csv", header=None)
+    df = pd.DataFrame(dataset)
+    df[1][:1500].plot(figsize=(16, 4), legend=True)
+    df[1][1500:].plot(figsize=(16, 4), legend=True)
+    plt.legend(['Training Set', 'Test Set'], )
+    plt.title('L1 Smart Cache on Simulated Cache for Replacement Policies')
+    plt.show()
+
+
+def createTempPredictions(predictions):
+    original_mem = pd.read_csv("gen_mem.csv", header=None)
+    original_mem = pd.DataFrame(original_mem)
+    num_of_predictions = len(predictions)
+    data_predictions = pd.DataFrame(predictions)
+    len_replace_mem_start = len(original_mem) - num_of_predictions
+    # print(original_mem[1500:])
+    for i in range(0, num_of_predictions):
+        new_orig_mem = original_mem.replace(i, data_predictions[0][i])
+    # print(original_mem[1500:])
+
+    diff_mem = original_mem.compare(new_orig_mem, align_axis=0)
+    print(diff_mem)
 
 def Train_Replacement_Policy():
     # data set column [0] = address
@@ -59,16 +88,6 @@ def Train_Replacement_Policy():
     # print(training_set)
     test_set = df[1][1500:].values
     # print(test_set)
-
-    # -------------------------------------------------------------------
-    # plot sequence for prediction
-    # plot demonstrates predictability and sequence in index + tag
-    # -------------------------------------------------------------------
-    df[1][:1500].plot(figsize=(16, 4), legend=True)
-    df[1][1500:].plot(figsize=(16, 4), legend=True)
-    plt.legend(['Training Set', 'Test Set'], )
-    plt.title('L1 Smart Cache on Simulated Cache for Replacement Policies')
-    plt.show()
 
     # # --------------------------------------------------------------------
     # scale our training set from zero to 1 for training set
@@ -106,16 +125,13 @@ def Train_Replacement_Policy():
     # Reshaping X_train for efficient modelling
     X_Array = np.reshape(X_train, (X_Array.shape[0], X_Array.shape[1], 1))
 
-
-
     # print("Train X_array")
     # print(X_Array.shape)
 
     regressor = Sequential()
-    # # First LSTM layer with Dropout regularisation
+    # First LSTM layer with Dropout regularisation
     regressor.add(LSTM(units=50, return_sequences=True, input_shape=(X_Array.shape[1], 1)))
     regressor.add(Dropout(0.2))
-
     # Second LSTM layer
     regressor.add(LSTM(units=50, return_sequences=True))
     regressor.add(Dropout(0.2))
@@ -172,9 +188,10 @@ def Train_Replacement_Policy():
     predicted_cache_result = sc.inverse_transform(predicted_cache_result)
 
     # Visualizing the results for LSTM
-    Plot_Predictions(test_set, predicted_cache_result)
+    lstm_algo = 'Long Short-Term Memory (LSTM)'
+    Plot_Predictions(test_set, predicted_cache_result, lstm_algo)
     # evaluate model
-    Return_RMSE(test_set, predicted_cache_result)
+    LSTM_rmse = Return_RMSE(test_set, predicted_cache_result)
 
     # The GRU architecture
     regressorGRU = Sequential()
@@ -207,13 +224,25 @@ def Train_Replacement_Policy():
     GRU_predicted = sc.inverse_transform(GRU_predicted)
 
     # Visualizing the results for LSTM
-    Plot_Predictions(test_set, GRU_predicted)
+    gru_algo = 'Gated Recurrent Units (GRU)'
+    Plot_Predictions(test_set, GRU_predicted, gru_algo)
     # evaluate model
-    Return_RMSE(test_set, GRU_predicted)
+    GRU_rmse = Return_RMSE(test_set, GRU_predicted)
+
+    if GRU_rmse < LSTM_rmse:
+        print("LSTM Root Mean Square: " + str(LSTM_rmse))
+        print("GRU Root Mean Square: " + str(GRU_rmse))
+        return GRU_predicted
+    else:
+        print("LSTM Root Mean Square: " + str(LSTM_rmse))
+        print("GRU Root Mean Square: " + str(GRU_rmse))
+        return predicted_cache_result
 
 
 def main():
-    Train_Replacement_Policy()
+    Plot_Train_Test_Data()
+    predictions = Train_Replacement_Policy()
+    createTempPredictions(predictions)
 
 
 if __name__ == '__main__':
