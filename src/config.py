@@ -23,7 +23,7 @@ class CacheConfig(dict):
                               'mem_size'      : None,
                               'mem_range'     : None,
                               'address_size'  : 32 * b,
-                              'cache_size'    : 64 * KB,
+                              'cache_size'    : 8 * KB,
                               'line_size'     : 32 * B,
                               'mult_sims'     : 1,
                             }

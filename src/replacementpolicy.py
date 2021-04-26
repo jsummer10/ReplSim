@@ -8,7 +8,9 @@ Description : This file contains the replacement policy algorithms
               that will be used
 '''
 
-import random
+import random, os
+
+import ann
 
 class ReplacementPolicy():
     """ This class defines the replacement policy that 
@@ -18,7 +20,7 @@ class ReplacementPolicy():
     def __init__(self, repl):
         self.repl = repl
 
-    def Replace(self, cache, address_index, usage_index):
+    def Replace(self, cache, address_index, usage_index, new_tag):
         """ Pass to selected replacement policy """
 
         if self.repl == 'LRU':
@@ -34,7 +36,7 @@ class ReplacementPolicy():
         elif self.repl == 'MRU':
             return self.MRU(cache, address_index)
         elif self.repl == 'LRUML':
-            return self.LRUML(cache, address_index)
+            return self.LRUML(cache, address_index, new_tag)
 
     def LRU(self, cache, address_index):
         """ perform a least recently used replacement """ 
@@ -49,9 +51,14 @@ class ReplacementPolicy():
 
         return min_index
 
-    def LRUML(self, cache, address_index):
+    def LRUML(self, cache, address_index, new_tag):
         """ perform a least recently used replacement with machine learning """ 
-        
+
+        # Call machine learning prediction 
+        os.chdir("mem/")
+        ml_list = ann.main()
+        os.chdir("../")
+
         min_value = None
         min_index = None
 
@@ -60,14 +67,6 @@ class ReplacementPolicy():
                 min_value = line[address_index]['recency_index']
                 min_index = index
 
-        # Call machine learning prediction 
-        import ann
-        ml_list = ann.main()
-
-        #if ml_pred_replace:
-        #    return min_index
-        #else:
-        #    return None
 
     def RR(self, cache):
         """ perform a random replacement """ 

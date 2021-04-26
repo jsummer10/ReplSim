@@ -109,7 +109,7 @@ class Cache():
                 self.recency_index += 1
                 return False
 
-        repl_index = self.repl_policy.Replace(self.cache, address_index, self.usage_index)
+        repl_index = self.repl_policy.Replace(self.cache, address_index, self.usage_index, address_tag)
 
         if repl_index is None:
             return False
