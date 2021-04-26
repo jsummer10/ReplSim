@@ -97,7 +97,10 @@ def createTempPredictions(predictions):
     # print(original_mem[1500:])
     for i in range(0, num_of_predictions):
         new_orig_mem = original_mem.replace(i, data_predictions[0][i])
-    return new_orig_mem
+
+    data_new_mem = pd.DataFrame(new_orig_mem)
+    list_new_mem = data_new_mem.values.tolist()
+    return list_new_mem
 
 
 def Train_Replacement_Policy():
@@ -219,7 +222,7 @@ def Train_Replacement_Policy():
 
     # Visualizing the results for LSTM
     lstm_algo = 'Long Short-Term Memory (LSTM)'
-    Plot_Predictions(test_set, predicted_cache_result, lstm_algo)
+    # Plot_Predictions(test_set, predicted_cache_result, lstm_algo)
     # evaluate model
     LSTM_rmse = Return_RMSE(test_set, predicted_cache_result)
 
@@ -255,7 +258,7 @@ def Train_Replacement_Policy():
 
     # Visualizing the results for LSTM
     gru_algo = 'Gated Recurrent Units (GRU)'
-    Plot_Predictions(test_set, GRU_predicted, gru_algo)
+    # Plot_Predictions(test_set, GRU_predicted, gru_algo)
     # evaluate model
     GRU_rmse = Return_RMSE(test_set, GRU_predicted)
 
@@ -272,10 +275,11 @@ def Train_Replacement_Policy():
 def main():
     os.chdir("../mem/")
 
-    Plot_Train_Test_Data()
+    # Plot_Train_Test_Data()
     predictions = Train_Replacement_Policy()
-    createTempPredictions(predictions)
-
+    temp_cache_data = createTempPredictions(predictions)
+    return temp_cache_data
 
 if __name__ == '__main__':
     main()
+
