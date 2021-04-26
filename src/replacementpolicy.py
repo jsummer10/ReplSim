@@ -62,7 +62,7 @@ class ReplacementPolicy():
 
         # Call machine learning prediction 
         import ann
-        ann.main()
+        ml_list = ann.main()
 
         #if ml_pred_replace:
         #    return min_index
