@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 '''
 Application : ReplSim
 File name   : run.py
@@ -51,7 +53,7 @@ __status__        = 'Development'
 __doc__           = 'The Replacement Policy Simulator helps simulate a fully associative or set \
                      associative cache to estimate the hit rate for various replacement policies'
 
-import os, sys, time
+import os, sys, time, signal
 
 sys.path.insert(0, os.getcwd() + os.path.sep + 'src')
 
@@ -60,7 +62,15 @@ from src.logger import InitializeLogger
 from src.arguments import ReadArguments
 
 
+def signal_handler(sig, frame):
+    print('\n-- Ending Simulation --\n')
+    sys.exit()
+
 def main():
+
+    # Handle Ctrl-C at runtime
+    signal.signal(signal.SIGINT, signal_handler)
+
     # Save initial start time
     start_time = time.time()
 
