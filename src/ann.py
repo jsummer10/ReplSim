@@ -20,6 +20,7 @@ from sklearn.preprocessing import MinMaxScaler
 import math
 from sklearn.metrics import mean_squared_error
 
+
 def Plot_Predictions(test, predicted, mlalgo):
     plt.plot(test, color='red', label='Real Policy Replacement')
     plt.plot(predicted, color='blue', label='Predicted Replacement Policy')
@@ -63,6 +64,7 @@ def createTempPredictions(predictions):
     for i in range(0, num_of_predictions):
         new_orig_mem = original_mem.replace(i, data_predictions[0][i])
     return new_orig_mem
+
 
 def Train_Replacement_Policy():
     # data set column [0] = address
@@ -234,12 +236,11 @@ def Train_Replacement_Policy():
 
 
 def main():
-
     os.chdir("../mem/")
 
     Plot_Train_Test_Data()
     predictions = Train_Replacement_Policy()
-    return predictions
+    createTempPredictions(predictions)
 
 
 if __name__ == '__main__':
