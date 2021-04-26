@@ -239,8 +239,7 @@ def Train_Replacement_Policy():
 def main():
     Plot_Train_Test_Data()
     predictions = Train_Replacement_Policy()
-    temp_cache = createTempPredictions(predictions)
-    return temp_cache
+    return predictions
 
 
 if __name__ == '__main__':
