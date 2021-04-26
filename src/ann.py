@@ -28,7 +28,7 @@ def Plot_Predictions(test, predicted, mlalgo):
     plt.xlabel('Number of Replaced (Tag + Index)')  # want to predict patterns of memory hits
     plt.ylabel('Tag + Index Values')
     plt.legend()
-    plt.show()
+    #plt.show()
 
 
 # -----------------------------------------------------------------
@@ -51,7 +51,7 @@ def Plot_Train_Test_Data():
     df[1][1500:].plot(figsize=(16, 4), legend=True)
     plt.legend(['Training Set', 'Test Set'], )
     plt.title('L1 Smart Cache on Simulated Cache for Replacement Policies')
-    plt.show()
+    #plt.show()
 
 
 def createTempPredictions(predictions):
