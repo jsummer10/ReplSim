@@ -43,6 +43,7 @@ Description : This file contains the development of a neural net
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+import logging
 import pandas as pd
 import os
 import numpy as np
@@ -263,12 +264,12 @@ def Train_Replacement_Policy():
     GRU_rmse = Return_RMSE(test_set, GRU_predicted)
 
     if GRU_rmse < LSTM_rmse:
-        print("LSTM Root Mean Square: " + str(LSTM_rmse))
-        print("GRU Root Mean Square: " + str(GRU_rmse))
+        logging.info("LSTM Root Mean Square: " + str(LSTM_rmse))
+        logging.info("GRU Root Mean Square: " + str(GRU_rmse))
         return GRU_predicted
     else:
-        print("LSTM Root Mean Square: " + str(LSTM_rmse))
-        print("GRU Root Mean Square: " + str(GRU_rmse))
+        logging.info("LSTM Root Mean Square: " + str(LSTM_rmse))
+        logging.info("GRU Root Mean Square: " + str(GRU_rmse))
         return predicted_cache_result
 
 

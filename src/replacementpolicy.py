@@ -54,8 +54,10 @@ class ReplacementPolicy():
 
     def __init__(self, repl):
         self.repl = repl
-        self.GetMLPrediction()
-        self.ml_counter = 0
+
+        if repl == 'LRUML':
+            self.GetMLPrediction()
+            self.ml_counter = 0
 
     def GetMLPrediction(self):
 
