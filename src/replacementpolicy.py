@@ -42,8 +42,9 @@ Description : This file contains the replacement policy algorithms
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-import random, os
+import random, os, sys
 
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 import ann
 
 class ReplacementPolicy():
@@ -53,6 +54,14 @@ class ReplacementPolicy():
 
     def __init__(self, repl):
         self.repl = repl
+        self.GetMLPrediction()
+        self.ml_counter = 0
+
+    def GetMLPrediction(self):
+
+        os.chdir("mem/")
+        self.ml_list = ann.main()
+        os.chdir("../")
 
     def Replace(self, cache, address_index, usage_index, new_addr):
         """ Pass to selected replacement policy """
@@ -88,34 +97,34 @@ class ReplacementPolicy():
     def LRUML(self, cache, address_index, new_addr):
         """ perform a least recently used replacement with machine learning """ 
 
-        # Call machine learning prediction 
-        os.chdir("mem/")
-        ml_list = ann.main()
-        os.chdir("../")
-
-        # Don't replace an item in the cache if the address doesn't occur again 
-        if new_addr not in ml_list:
-            return None
-
         min_value = None
         min_index = None
 
-        # LRU replacement with an ML check 
-        for index, line in enumerate(cache):
-            if min_value is None or line[address_index]['recency_index'] < min_value:
-
-                if line[address_index]['tag_index'] in ml_list:
-                    continue
-
-                min_value = line[address_index]['recency_index']
-                min_index = index
-
-        # If every address in cache occurs again, run normal LRU replacement
-        if min_index is None:
+        # Don't replace an item in the cache if the address doesn't occur again 
+        if new_addr in self.ml_list:
+        
+            # LRU replacement with an ML check 
             for index, line in enumerate(cache):
                 if min_value is None or line[address_index]['recency_index'] < min_value:
+    
+                    if line[address_index]['tag_index'] in self.ml_list:
+                        continue
+    
                     min_value = line[address_index]['recency_index']
                     min_index = index
+    
+            # If every address in cache occurs again, run normal LRU replacement
+            if min_index is None:
+                for index, line in enumerate(cache):
+                    if min_value is None or line[address_index]['recency_index'] < min_value:
+                        min_value = line[address_index]['recency_index']
+                        min_index = index
+
+        self.ml_counter += 1 
+
+        if self.ml_counter == 250:
+            self.GetMLPrediction()
+            self.ml_counter = 0
 
         return min_index
 

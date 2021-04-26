@@ -41,7 +41,7 @@ Description : This file contains the functionality to parse CLI arguments
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-import argparse, os, sys, subprocess
+import argparse, os, sys, subprocess, logging
 
 from genmem     import MemoryGenerator
 from fileparser import Parse
@@ -77,10 +77,18 @@ def ParseArguments():
 
 def MemFromFile(filename):
     cache_config['mem_src'] = 'File'
+    logging.info('Reading memory file')
     return Parse(filename)
 
 def RandomMem(size, max_address, filename, pattern_type='normal', save_mem=False):
     cache_config['mem_src'] = 'Generated'
+    logging.info('Generating memory...')
+    logging.info('Memory Size: ' + str(size))
+    logging.info('Memory Max Address: ' + str(max_address))
+    logging.info('Memory Pattern: ' + str(pattern_type))
+    logging.info('Memory Save Filename: ' + str(filename))
+    logging.info('Memory Save: ' + str(save_mem))
+    logging.info('')
     gen_mem = MemoryGenerator()
     return gen_mem.GenerateMemory(size, max_address, filename, pattern_type, save_mem)
 
@@ -299,6 +307,11 @@ def ReadArguments():
     """ Read in command line arguments """
 
     args = ParseArguments()
+
+    logging.info('Command line arguments...')
+    for arg in vars(args):
+        logging.info(str(arg) + ': ' + str(getattr(args, arg)))
+    logging.info('')
 
     IsTest(args)
     ProcessCacheSize(args)
