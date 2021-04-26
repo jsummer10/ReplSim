@@ -43,6 +43,7 @@ Description : This file contains the development of a neural net
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+import silence_tensorflow.auto
 import logging
 import pandas as pd
 import os
@@ -244,7 +245,7 @@ def Train_Replacement_Policy():
     # The output layer
     regressorGRU.add(Dense(units=1))
     # Compiling the RNN
-    regressorGRU.compile(optimizer=SGD(lr=0.01, decay=1e-7, momentum=0.9, nesterov=False), loss='mean_squared_error')
+    regressorGRU.compile(optimizer=SGD(learning_rate=0.01, decay=1e-7, momentum=0.9, nesterov=False), loss='mean_squared_error')
     # Fitting to the training set
     regressorGRU.fit(X_Array, y_Array, epochs=150, batch_size=200, verbose=0)
 

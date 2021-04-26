@@ -44,7 +44,6 @@ Description : This file contains the replacement policy algorithms
 
 import random, os, sys
 
-os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 import ann
 
 class ReplacementPolicy():
@@ -56,7 +55,9 @@ class ReplacementPolicy():
         self.repl = repl
 
         if repl == 'LRUML':
+            print('Configuring machine learning')
             self.GetMLPrediction()
+            print('')
             self.ml_counter = 0
 
     def GetMLPrediction(self):

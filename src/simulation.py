@@ -82,7 +82,7 @@ class Simulation():
 
         self.sim_configs = []
 
-        self.title = '2-Way Set Associative Replacement Policy Comparison (' + self.mem_pattern + ')'
+        self.title = '2-Way Set Associative Replacement Policy Comparison (' + self.mem_pattern + ' Memory Pattern)'
 
         self.sim_configs.append(Cache(config_name='LRU Cache (2-way)',   repl='LRU',     ways=2))
         self.sim_configs.append(Cache(config_name='RR Cache (2-way)',    repl='RR',      ways=2))
@@ -173,12 +173,10 @@ def StartSimulations(sim_queue, mem_accesses):
 
     print('Running', len(sim_queue), 'simulations...\n')
 
-    count = 1
-    for sim in sim_queue:
-        thread = myThread(count, 'Thread-' + str(count), count, sim, mem_accesses)
+    for index, sim in enumerate(sim_queue):
+        thread = myThread(index+1, 'Thread-' + str(index+1), index+1, sim, mem_accesses)
         thread.start()
         threads.append(thread)
-        count += 1
 
     for thread in threads:
         thread.join()

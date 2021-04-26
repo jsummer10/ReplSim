@@ -7,7 +7,7 @@
 The following dependencies will need to be installed
 
 ``` 
-pip3 install xlsxwriter plotly argparse openpyxl pandas tensorflow sklearn
+pip3 install xlsxwriter plotly argparse openpyxl pandas tensorflow sklearn silence_tensorflow
 ```
 
 ## Configuration
