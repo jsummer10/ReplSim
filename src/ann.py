@@ -184,7 +184,7 @@ def Train_Replacement_Policy():
     # Compiling the RNN
     regressor.compile(optimizer='rmsprop', loss='mean_squared_error')
     # Fitting to the training set
-    regressor.fit(X_Array, y_Array, epochs=150, batch_size=200)
+    regressor.fit(X_Array, y_Array, epochs=150, batch_size=200, verbose=0)
 
     # --------------------------------------------------------------------
     # Get test set ready as the training set
@@ -245,7 +245,7 @@ def Train_Replacement_Policy():
     # Compiling the RNN
     regressorGRU.compile(optimizer=SGD(lr=0.01, decay=1e-7, momentum=0.9, nesterov=False), loss='mean_squared_error')
     # Fitting to the training set
-    regressorGRU.fit(X_Array, y_Array, epochs=150, batch_size=200)
+    regressorGRU.fit(X_Array, y_Array, epochs=150, batch_size=200, verbose=0)
 
     # Preparing X_test and predicting the prices
     X_test_GRU = []
