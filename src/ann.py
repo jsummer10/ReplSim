@@ -65,10 +65,7 @@ def createTempPredictions(predictions):
     # print(original_mem[1500:])
     for i in range(0, num_of_predictions):
         new_orig_mem = original_mem.replace(i, data_predictions[0][i])
-    # print(original_mem[1500:])
-
-    diff_mem = original_mem.compare(new_orig_mem, align_axis=0)
-    print(diff_mem)
+    return new_orig_mem
 
 def Train_Replacement_Policy():
     # data set column [0] = address
@@ -242,7 +239,8 @@ def Train_Replacement_Policy():
 def main():
     Plot_Train_Test_Data()
     predictions = Train_Replacement_Policy()
-    createTempPredictions(predictions)
+    temp_cache = createTempPredictions(predictions)
+    return temp_cache
 
 
 if __name__ == '__main__':

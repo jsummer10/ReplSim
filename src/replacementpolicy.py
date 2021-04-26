@@ -61,6 +61,8 @@ class ReplacementPolicy():
                 min_index = index
 
         # Call machine learning prediction 
+        import ann
+        ann.main()
 
         #if ml_pred_replace:
         #    return min_index
