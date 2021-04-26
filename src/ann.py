@@ -1,5 +1,5 @@
 """
-Project     : Replacement Policy Simulation
+Application : ReplSim
 File name   : ANN.py
 Authors     : Jacob Summerville, Martin Lopez, Henry Lee
 Creation    : 04/19/21

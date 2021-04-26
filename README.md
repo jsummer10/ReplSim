@@ -1,4 +1,4 @@
-# Replacement Policy Simulation
+# Replacement Policy Simulator
 
 # 1 Overview 
 
