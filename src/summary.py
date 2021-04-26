@@ -18,11 +18,12 @@ import plotly.graph_objects as go
 class Summary():
     """ This class creates an excel summary of the simulation """ 
 
-    def __init__(self, sim_list):
+    def __init__(self, sim_list, title):
 
         print('Processing Results')
 
         self.sim_list = sim_list
+        self.title = title
 
         self.CreateWorkbook()
         self.CreateFormats()
@@ -136,7 +137,7 @@ class Summary():
         # Graph bar graph to show the number of commits by author
         fig = go.Figure([go.Bar(x=x_sim, y=y_rate)])
 
-        fig.update_layout(title_text  = 'Hit Rate Comparison',
+        fig.update_layout(title_text  = self.title,
                           xaxis_title = 'Simulations',
                           yaxis_title = 'Hit Rate (%)')
 

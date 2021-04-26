@@ -19,9 +19,10 @@ class CacheConfig(dict):
     """ This class sets the cache configuration """
     def __init__(self):
         self.cache_config = { 'memory'        : None,
-                              'mem_type'      : '',
+                              'mem_src'      : '',
                               'mem_size'      : None,
                               'mem_range'     : None,
+                              'mem_pattern'   : 'normal',
                               'address_size'  : 32 * b,
                               'cache_size'    : 8 * KB,
                               'line_size'     : 32 * B,

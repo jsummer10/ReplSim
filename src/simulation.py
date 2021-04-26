@@ -25,11 +25,21 @@ class Simulation():
     def PrintConfiguration(self):
         """ Prints build configuration to command line """
 
+        if cache_config['mem_pattern'] == 'normal':
+            self.mem_pattern = 'Normal'
+        elif cache_config['mem_pattern'] == 'loops':
+            self.mem_pattern = 'Heavy Loops'
+        elif cache_config['mem_pattern'] == 'rep':
+            self.mem_pattern = 'Heavy Repetition'
+        elif cache_config['mem_pattern'] == 'random':
+            self.mem_pattern = 'Random'
+
         print('\nCache Configuration...\n')
-        print('Memory Type  :', cache_config['mem_type'])
-        print('Cache Size   :', cache_config['cache_size'], 'bytes')
-        print('Line Size    :', cache_config['line_size'], 'bytes')
-        print('Address Size :', cache_config['address_size'], 'bits')
+        print('Memory Source  :', cache_config['mem_src'])
+        print('Memory Pattern :', self.mem_pattern)
+        print('Cache Size     :', cache_config['cache_size'], 'bytes')
+        print('Line Size      :', cache_config['line_size'], 'bytes')
+        print('Address Size   :', cache_config['address_size'], 'bits')
 
         print('\n---------------------------------------\n')
 
@@ -38,13 +48,15 @@ class Simulation():
 
         self.sim_configs = []
 
+        self.title = '2-Way Set Associative Replacement Policy Comparison (' + self.mem_pattern + ')'
+
         self.sim_configs.append(Cache(config_name='LRU Cache (2-way)',   repl='LRU',     ways=2))
         self.sim_configs.append(Cache(config_name='RR Cache (2-way)',    repl='RR',      ways=2))
         self.sim_configs.append(Cache(config_name='LFRU Cache (2-way)',  repl='LFRU',    ways=2))
         self.sim_configs.append(Cache(config_name='LFU Cache (2-way)',   repl='LFU',     ways=2))
         self.sim_configs.append(Cache(config_name='FIFO Cache (2-way)',  repl='FIFO',    ways=2))
         self.sim_configs.append(Cache(config_name='MRU Cache (2-way)',   repl='MRU',     ways=2))
-        self.sim_configs.append(Cache(config_name='LRUML Cache (2-way)', repl='LRUML',   ways=2))
+        #self.sim_configs.append(Cache(config_name='LRUML Cache (2-way)', repl='LRUML',   ways=2))
 
     def RunSims(self):
         """ Select how many sim batches will be run """
@@ -63,7 +75,7 @@ class Simulation():
 
         StartSimulations(self.sim_configs, cache_config['memory'])
 
-        Summary(sim_results)
+        Summary(sim_results, self.title)
 
     def RunMultiple(self):
 
@@ -78,6 +90,7 @@ class Simulation():
             cache_config['memory'] = RandomMem(size=cache_config['mem_size'], 
                                                max_address=cache_config['mem_range'],
                                                filename='gen_mem' + str(i+1) + '.csv',
+                                               pattern_type=cache_config['mem_pattern'],
                                                save_mem=True)
 
             print('Beginning simulation batch', i+1, 'of', cache_config['mult_sims'], 'using gen_mem' + str(i+1) + '.txt')
@@ -103,7 +116,7 @@ class Simulation():
 
             sim_results = []
 
-        Summary(total_results)
+        Summary(total_results, self.title)
 
 class myThread (threading.Thread):
     """ This class enables multithreading capabilities """

@@ -33,6 +33,7 @@ def ParseArguments():
     parser.add_argument('-f', '--file', help='Text file to be used (e.g. mem/sample_mem.txt)')
     parser.add_argument('--memsize',    help='Memory size of generated memory')
     parser.add_argument('--memrange',   help='Max range of memory in generated memory')
+    parser.add_argument('--mempattern', help='Generated memory pattern focus (normal, loops, rep, random)')
     parser.add_argument('--cachesize',  help='Cache size to be used')
     parser.add_argument('--linesize',   help='Cache line size to be used')
     parser.add_argument('--mult',       help='Run an entered number of simulations back-to-back')
@@ -41,19 +42,15 @@ def ParseArguments():
     return parser.parse_args()
 
 def MemFromFile(filename):
-    cache_config['mem_type'] = 'File'
+    cache_config['mem_src'] = 'File'
     return Parse(filename)
 
-def RandomMem(size, max_address, filename, save_mem=False):
-    cache_config['mem_type'] = 'Generated'
+def RandomMem(size, max_address, filename, pattern_type='normal', save_mem=False):
+    cache_config['mem_src'] = 'Generated'
     gen_mem = MemoryGenerator()
-    return gen_mem.GenerateMemory(size, max_address, filename, save_mem)
+    return gen_mem.GenerateMemory(size, max_address, filename, pattern_type, save_mem)
 
-def ReadArguments():
-    """ Read in command line arguments """
-
-    args = ParseArguments()
-
+def IsTest(args):
     if args.test:
 
         # Remove all arguments
@@ -64,6 +61,7 @@ def ReadArguments():
         print('')
         sys.exit()
 
+def ProcessCacheSize(args):
     # Set cache size using CLI argument
     if args.cachesize:
 
@@ -116,6 +114,7 @@ def ReadArguments():
                 print('Unable to understand the cache size of', args.cachesize)
                 sys.exit()
 
+def ProcessLineSize(args):
     # Set line size using CLI argument
     if args.linesize:
 
@@ -168,6 +167,7 @@ def ReadArguments():
                 print('Unable to understand the line size of', args.linesize)
                 sys.exit()
 
+def ProcessMulti(args):
     if args.mult:
 
         try:
@@ -180,8 +180,30 @@ def ReadArguments():
             print('Mult has to be greater than or equal to zero')
             sys.exit()
 
-        cache_config['mult_sims'] = multiple
+        cache_config['mult_sims'] = multiple      
 
+def ProcessMemPattern(args):
+    if args.mempattern:
+    
+        try:
+            mempattern = args.mempattern.lower().strip()
+        except:
+            print('Unable to read', args.mempattern)
+            sys.exit()
+
+        if mempattern == 'normal':
+            cache_config['mem_pattern'] = mempattern
+        elif mempattern == 'loops':
+            cache_config['mem_pattern'] = mempattern
+        elif mempattern == 'rep':
+            cache_config['mem_pattern'] = mempattern
+        elif mempattern == 'random':
+            cache_config['mem_pattern'] = mempattern
+        else:
+            print(args.mempattern, 'is not an option. Enter normal, loops, rep, or random')
+            sys.exit()
+
+def ProcessMemFile(args):
     # Read in text file for memory using CLI argument
     if args.file:
         if(os.path.isfile(args.file)):
@@ -235,8 +257,20 @@ def ReadArguments():
 
         cache_config['memory']  = RandomMem(size=cache_config['mem_size'], 
                                             max_address=cache_config['mem_range'], 
+                                            pattern_type=cache_config['mem_pattern'],
                                             filename='gen_mem.csv',
                                             save_mem=True)
 
+def ReadArguments():
+    """ Read in command line arguments """
 
+    args = ParseArguments()
+
+    IsTest(args)
+    ProcessCacheSize(args)
+    ProcessLineSize(args)
+    ProcessMulti(args)
+    ProcessMemPattern(args)
+    ProcessMemFile(args)
+    
 

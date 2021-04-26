@@ -17,7 +17,7 @@ class MemoryGenerator():
     def __init__(self):
         self.memory = []
 
-    def GenerateMemory(self, size, max_address, filename, save_mem):
+    def GenerateMemory(self, size, max_address, filename, pattern_type, save_mem):
         """ Generates a list of random memory addresses to use """
 
         self.size = size
@@ -27,21 +27,66 @@ class MemoryGenerator():
 
         self.InitialMemory()
 
-        self.InjectRandomLoop(num_loops=int(self.size / 40), loop_size=6)
-
-        self.InjectIncrementLoop(num_loops=int(self.size / 40), loop_size=8, increment=4)
-        self.InjectIncrementLoop(num_loops=int(self.size / 40), loop_size=8, increment=12)
-
-        self.InjectRepetition(int(self.size / 40))
-        self.InjectRepetition(int(self.size / 40))
-        self.InjectRepetition(int(self.size / 40))
-        self.InjectRepetition(int(self.size / 40))
-        self.InjectRepetition(int(self.size / 40))
+        if pattern_type == 'normal':
+            self.NormalPatterns()
+        elif pattern_type == 'loops':
+            self.LoopPattern()
+        elif pattern_type == 'rep':
+            self.RepPattern()
+        elif pattern_type == 'random':
+            pass # Add nothing
 
         if save_mem:
             self.SaveToFile(filename)
 
         return self.memory
+
+    def NormalPatterns(self):
+        self.InjectRandomLoop(num_loops=int(self.size / 40), loop_size=6)
+        self.InjectRandomLoop(num_loops=int(self.size / 40), loop_size=3)
+
+        self.InjectIncrementLoop(num_loops=int(self.size / 40), loop_size=15, increment=4)
+        self.InjectIncrementLoop(num_loops=int(self.size / 40), loop_size=8,  increment=4)
+        self.InjectIncrementLoop(num_loops=int(self.size / 40), loop_size=6,  increment=4)
+        self.InjectIncrementLoop(num_loops=int(self.size / 40), loop_size=11, increment=12)
+
+        self.InjectRepetition(int(self.size / 40))
+        self.InjectRepetition(int(self.size / 40))
+        self.InjectRepetition(int(self.size / 40))
+        self.InjectRepetition(int(self.size / 40))
+        self.InjectRepetition(int(self.size / 40))
+
+    def LoopPattern(self):
+        self.InjectRepetition(int(self.size / 40))
+        self.InjectRepetition(int(self.size / 40))
+
+        self.InjectRandomLoop(num_loops=int(self.size / 20), loop_size=6)
+        self.InjectRandomLoop(num_loops=int(self.size / 20), loop_size=4)
+        self.InjectRandomLoop(num_loops=int(self.size / 20), loop_size=7)
+
+        self.InjectIncrementLoop(num_loops=int(self.size / 20), loop_size=8,  increment=4)
+        self.InjectIncrementLoop(num_loops=int(self.size / 20), loop_size=12, increment=12)
+        self.InjectIncrementLoop(num_loops=int(self.size / 20), loop_size=9,  increment=4)
+        self.InjectIncrementLoop(num_loops=int(self.size / 20), loop_size=20, increment=4)
+        self.InjectIncrementLoop(num_loops=int(self.size / 20), loop_size=4,  increment=8)
+        self.InjectIncrementLoop(num_loops=int(self.size / 20), loop_size=5,  increment=4)
+        self.InjectIncrementLoop(num_loops=int(self.size / 20), loop_size=7,  increment=24)
+
+    def RepPattern(self):
+        self.InjectRandomLoop(num_loops=int(self.size / 20), loop_size=4)
+        self.InjectIncrementLoop(num_loops=int(self.size / 20), loop_size=8, increment=4)
+        self.InjectIncrementLoop(num_loops=int(self.size / 20), loop_size=6, increment=4)
+
+        self.InjectRepetition(int(self.size / 20))
+        self.InjectRepetition(int(self.size / 20))
+        self.InjectRepetition(int(self.size / 20))
+        self.InjectRepetition(int(self.size / 20))
+        self.InjectRepetition(int(self.size / 20))
+        self.InjectRepetition(int(self.size / 20))
+        self.InjectRepetition(int(self.size / 20))
+        self.InjectRepetition(int(self.size / 20))
+        self.InjectRepetition(int(self.size / 20))
+        self.InjectRepetition(int(self.size / 20))
 
     def InitialMemory(self):
         """ Generates a list of random numbers from 0 to max_address """
