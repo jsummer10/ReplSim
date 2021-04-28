@@ -51,7 +51,7 @@ Data will be saved to an excel workbook and a graph demonstrating the hit ratio.
     - Replaces an item with the least usage and the least recently used
 - LFU: Least Frequently Used
     - Replaces an item with the least usage
-- FIFO: First On First Out
+- FIFO: First In First Out
     - Replace the item that was added first with no regard to its usage
 
 ### Custom Replacement Policies
